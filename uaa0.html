@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPES de Hesbaye - UAA0: Second Degré – LIBOY D.</title>
+  
+  <!-- Tailwind CSS pour les composants interactifs -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- MathJax pour l'affichage des formules mathématiques -->
+  <script>
+      window.MathJax = {
+          tex: {
+              inlineMath: [['$', '$'], ['\\(', '\\)']],
+              displayMath: [['$$', '$$'], ['\\[', '\\]']]
+          },
+          svg: { fontCache: 'global' }
+      };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    /* ----- THEME UAA2 ORIGINAL (Bleu/Indigo) ----- */
+    :root{
+      --bg1:#0f172a; --bg2:#1d4ed8; --bg3:#7c3aed;
+      --card:#ffffffee; --text:#14213d; --muted:#475569;
+      --accent:#f97316; --accent2:#14b8a6; --ok:#16a34a; --bad:#dc2626;
+      --shadow:0 18px 40px rgba(15,23,42,.18);
+      --radius:22px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; font-family: Arial, Helvetica, sans-serif; color: var(--text);
+      background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+      min-height: 100vh;
+    }
+    .main-container { width: min(1180px, 92vw); margin: 0 auto; padding: 26px 0 40px; }
+    
+    .hero {
+      background: linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
+      border: 1px solid rgba(255,255,255,.16);
+      color: white; border-radius: 30px; padding: 28px; box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      margin-bottom: 24px;
+    }
+    .hero h1 { margin: 0 0 10px; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: bold; }
+    .hero h2 { margin: 0 0 8px; font-size: 1.5rem; font-weight: bold; }
+    .hero p { margin: .35rem 0; line-height: 1.6; }
+    
+    .card {
+      background: var(--card); border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+    
+    .badge { display: inline-block; padding: 6px 12px; border-radius: 999px; font-weight: bold; font-size: .85rem; color: white; background: linear-gradient(90deg, #14b8a6, #0d9488); }
+    .topbar { display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 18px; }
+    
+    .btn {
+      border: none; cursor: pointer; border-radius: 999px; padding: 12px 24px; font-weight: 700;
+      background: linear-gradient(90deg, var(--accent), #fb7185); color: white; box-shadow: var(--shadow); text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+    .btn.alt { background: linear-gradient(90deg, var(--accent2), #38bdf8); }
+    .btn.solution { background: linear-gradient(90deg, #8b5cf6, #d946ef); }
+    .btn.ghost { background: #eef2ff; color: #1e293b; box-shadow: none; border: 1px solid #cbd5e1; }
+    
+    .footer-note { color: white; opacity: .9; text-align: center; padding: 10px; }
+    
+    .tabs { display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 6px; }
+    .tab-btn { 
+        background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.25); 
+        color: white; padding: 10px 20px; border-radius: 999px; font-weight: bold; 
+        white-space: nowrap; transition: all 0.2s; backdrop-filter: blur(10px); cursor: pointer;
+    }
+    .tab-btn:hover { background: rgba(255, 255, 255, 0.25); }
+    .tab-btn.active { background: white; color: var(--text); box-shadow: var(--shadow); }
+
+    /* ----- LOGIQUE SPA ----- */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Composants Spécifiques Tuteur */
+    .exercise-block{border:1px solid #e2e8f0; border-radius:18px; padding:20px; background:#fff; margin-top: 18px;}
+    .result{padding:16px; border-radius:14px; margin-top:20px; font-weight:normal; display:none;}
+    .result h3 { margin-top: 0; color: #1e293b; margin-bottom: 8px;}
+    .ok{background:#dcfce7; color:#166534; border: 1px solid #bbf7d0;}
+    .bad{background:#fee2e2; color:#991b1b; border: 1px solid #fecaca;}
+    .info{background:#e0f2fe; color:#075985; border: 1px solid #bae6fd;}
+    .warning{background:#fef3c7; color:#92400e; border: 1px solid #fde68a;}
+    
+    input, select { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; width: 100%; outline: none;}
+    input:focus, select:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2); }
+    label { font-weight: bold; display: block; margin-bottom: 4px; color: #334155; font-size: 0.9rem;}
+    
+    table.sign-table { width: 100%; border-collapse: collapse; text-align: center; margin-top: 10px; }
+    table.sign-table th, table.sign-table td { border: 1px solid #cbd5e1; padding: 8px; }
+    table.sign-table th { background-color: #f1f5f9; color: #475569; }
+  </style>
+</head>
+<body>
+  <div class="main-container">
+    
+    <div class="topbar">
+      <a class="btn ghost" style="background: rgba(255,255,255,0.2); color: white; border: none; backdrop-filter: blur(5px);" href="index.html">⟵ Retour à l'accueil</a>
+      <span class="badge" style="background: linear-gradient(90deg, #dc2626, #ef4444);">UAA0</span>
+    </div>
+
+    <section class="hero">
+      <h2>IPES DE HESBAYE - MATHEMATIQUES (4H) - 5TT</h2>
+      <h2>CHAPITRE 0: Rappel sur le second degré</h2>
+      <p>LIBOY D.</p>
+    </section>
+    
+    <nav class="tabs">
+      <button onclick="switchTab('theorie')" id="btn-theorie" class="tab-btn active">Théorie & Exemples</button>
+      <button onclick="switchTab('exercice')" id="btn-exercice" class="tab-btn">Tuteur Pédagogique</button>
+    </nav>
+
+    <section id="theorie" class="tab-content active">
+      
+      <!-- Bloc Résolution -->
+      <div class="card">
+        <h2 class="text-2xl font-bold text-indigo-900 mb-6 border-b pb-2">Résolution et Factorisation</h2>
+        
+        <p class="mb-4 text-slate-700">La forme générale d'un trinôme du second degré est $f(x) = ax^2 + bx + c$. Pour résoudre $f(x)=0$, on calcule le discriminant :</p>
+        <div class="bg-indigo-50 p-4 rounded-xl text-center mb-6 border border-indigo-100 font-mono text-lg">
+            $\Delta = b^2 - 4ac$
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-blue-50 p-6 rounded-lg border-t-4 border-blue-500 shadow-sm flex flex-col">
+                <h3 class="font-bold text-lg mb-3 text-blue-800">1. Si $\Delta > 0$</h3>
+                <p class="text-sm text-slate-700 mb-2">L'équation admet <strong>deux racines</strong> distinctes :</p>
+                <div class="text-center text-sm font-mono bg-white p-2 rounded border mb-2">
+                    $x_{1,2} = \frac{-b \pm \sqrt{\Delta}}{2a}$
+                </div>
+                <p class="text-sm text-slate-700 mb-2 mt-auto">La forme factorisée est :</p>
+                <div class="text-center text-sm font-mono bg-white p-2 rounded border">
+                    $a(x - x_1)(x - x_2)$
+                </div>
+            </div>
+            
+            <div class="bg-emerald-50 p-6 rounded-lg border-t-4 border-emerald-500 shadow-sm flex flex-col">
+                <h3 class="font-bold text-lg mb-3 text-emerald-800">2. Si $\Delta = 0$</h3>
+                <p class="text-sm text-slate-700 mb-2">L'équation admet <strong>une racine double</strong> :</p>
+                <div class="text-center text-sm font-mono bg-white p-2 rounded border mb-2">
+                    $x_0 = \frac{-b}{2a}$
+                </div>
+                <p class="text-sm text-slate-700 mb-2 mt-auto">La forme factorisée est :</p>
+                <div class="text-center text-sm font-mono bg-white p-2 rounded border">
+                    $a(x - x_0)^2$
+                </div>
+            </div>
+
+            <div class="bg-amber-50 p-6 rounded-lg border-t-4 border-amber-500 shadow-sm flex flex-col">
+                <h3 class="font-bold text-lg mb-3 text-amber-800">3. Si $\Delta < 0$</h3>
+                <p class="text-sm text-slate-700 mb-2">L'équation n'admet <strong>aucune racine réelle</strong>.</p>
+                <div class="text-center text-sm font-mono bg-white p-2 rounded border mb-2 text-slate-400">
+                    $S = \emptyset$
+                </div>
+                <p class="text-sm text-slate-700 mb-2 mt-auto">Factorisation :</p>
+                <div class="text-center text-sm font-mono bg-white p-2 rounded border text-slate-500">
+                    Impossible dans $\mathbb{R}$
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="text-2xl font-bold text-indigo-900 mb-6 border-b pb-2">Tableau de signes du trinôme</h2>
+        <p class="mb-4 text-slate-700">Le signe de $ax^2 + bx + c$ dépend de son coefficient <strong>$a$</strong> et du nombre de racines.</p>
+
+        <div class="space-y-6">
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <strong class="block mb-2 text-indigo-800">Cas 1 : $\Delta > 0$ (Deux racines $x_1 < x_2$)</strong>
+                <p class="text-sm text-slate-600 mb-2">Le trinôme prend le <strong>signe de $a$ à l'extérieur</strong> des racines, et le <strong>signe contraire à l'intérieur</strong>.</p>
+                <div class="overflow-x-auto">
+                    <table class="sign-table bg-white">
+                        <tr><th>$x$</th><td>$-\infty$</td><td></td><td>$x_1$</td><td></td><td>$x_2$</td><td></td><td>$+\infty$</td></tr>
+                        <tr><th>$f(x)$</th><td></td><td class="text-blue-600 font-medium">Signe de $a$</td><td class="font-bold">0</td><td class="text-red-500 font-medium">Signe de $-a$</td><td class="font-bold">0</td><td class="text-blue-600 font-medium">Signe de $a$</td><td></td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <strong class="block mb-2 text-indigo-800">Cas 2 : $\Delta = 0$ (Une racine double $x_0$)</strong>
+                <p class="text-sm text-slate-600 mb-2">Le trinôme garde <strong>toujours le signe de $a$</strong>, sauf en sa racine où il vaut $0$.</p>
+                <div class="overflow-x-auto">
+                    <table class="sign-table bg-white">
+                        <tr><th>$x$</th><td>$-\infty$</td><td></td><td>$x_0$</td><td></td><td>$+\infty$</td></tr>
+                        <tr><th>$f(x)$</th><td></td><td class="text-blue-600 font-medium">Signe de $a$</td><td class="font-bold">0</td><td class="text-blue-600 font-medium">Signe de $a$</td><td></td></tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <strong class="block mb-2 text-indigo-800">Cas 3 : $\Delta < 0$ (Aucune racine)</strong>
+                <p class="text-sm text-slate-600 mb-2">Le trinôme ne s'annule jamais et garde <strong>strictement le signe de $a$ partout</strong>.</p>
+                <div class="overflow-x-auto">
+                    <table class="sign-table bg-white">
+                        <tr><th>$x$</th><td>$-\infty$</td><td></td><td>$+\infty$</td></tr>
+                        <tr><th>$f(x)$</th><td class="text-blue-600 font-medium" colspan="3">Signe de $a$</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="text-2xl font-bold text-indigo-900 mb-6 border-b pb-2">Exemples Résolus Pas-à-Pas</h2>
+        
+        <div class="space-y-8">
+            <!-- Exemple 1 -->
+            <div class="bg-blue-50/50 p-6 rounded-xl border border-blue-100">
+                <h3 class="font-bold text-xl text-blue-900 mb-4">Exemple 1 : $f(x) = x^2 - 5x + 6$</h3>
+                <ol class="list-decimal pl-5 space-y-3 text-slate-700">
+                    <li><strong>Coefficients :</strong> On identifie $a = 1$ (positif), $b = -5$, et $c = 6$.</li>
+                    <li>
+                        <strong>Discriminant :</strong> $\Delta = b^2 - 4ac$ <br>
+                        $\Delta = (-5)^2 - 4 \cdot (1) \cdot (6) = 25 - 24 = 1$
+                    </li>
+                    <li>
+                        <strong>Racines :</strong> Comme $\Delta > 0$, il y a deux racines. <br>
+                        $x_1 = \frac{-(-5) - \sqrt{1}}{2(1)} = \frac{5 - 1}{2} = 2$ <br>
+                        $x_2 = \frac{-(-5) + \sqrt{1}}{2(1)} = \frac{5 + 1}{2} = 3$
+                    </li>
+                    <li>
+                        <strong>Factorisation :</strong> La formule est $a(x-x_1)(x-x_2)$. <br>
+                        Ici $a=1$, donc : $f(x) = 1(x - 2)(x - 3) = (x - 2)(x - 3)$
+                    </li>
+                    <li>
+                        <strong>Tableau de signes :</strong> $a$ est positif ($+$). Le signe est $+$ à l'extérieur des racines (2 et 3).
+                        <div class="overflow-x-auto mt-2">
+                            <table class="sign-table bg-white w-full max-w-md">
+                                <tr><th>$x$</th><td>$-\infty$</td><td></td><td>$2$</td><td></td><td>$3$</td><td></td><td>$+\infty$</td></tr>
+                                <tr><th>$f(x)$</th><td></td><td class="text-emerald-600 font-bold">$+$</td><td class="font-bold">0</td><td class="text-red-500 font-bold">$-$</td><td class="font-bold">0</td><td class="text-emerald-600 font-bold">$+$</td><td></td></tr>
+                            </table>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+
+            <!-- Exemple 2 -->
+            <div class="bg-emerald-50/50 p-6 rounded-xl border border-emerald-100">
+                <h3 class="font-bold text-xl text-emerald-900 mb-4">Exemple 2 : $g(x) = -2x^2 + 4x - 2$</h3>
+                <ol class="list-decimal pl-5 space-y-3 text-slate-700">
+                    <li><strong>Coefficients :</strong> On identifie $a = -2$ (négatif), $b = 4$, et $c = -2$.</li>
+                    <li>
+                        <strong>Discriminant :</strong> $\Delta = b^2 - 4ac$ <br>
+                        $\Delta = (4)^2 - 4 \cdot (-2) \cdot (-2) = 16 - 16 = 0$
+                    </li>
+                    <li>
+                        <strong>Racines :</strong> Comme $\Delta = 0$, il y a une racine double. <br>
+                        $x_0 = \frac{-b}{2a} = \frac{-4}{2(-2)} = \frac{-4}{-4} = 1$
+                    </li>
+                    <li>
+                        <strong>Factorisation :</strong> La formule est $a(x-x_0)^2$. <br>
+                        Ici $a=-2$, donc : $g(x) = -2(x - 1)^2$
+                    </li>
+                    <li>
+                        <strong>Tableau de signes :</strong> $a$ est négatif ($-$). Le trinôme garde ce signe partout.
+                        <div class="overflow-x-auto mt-2">
+                            <table class="sign-table bg-white w-full max-w-md">
+                                <tr><th>$x$</th><td>$-\infty$</td><td></td><td>$1$</td><td></td><td>$+\infty$</td></tr>
+                                <tr><th>$g(x)$</th><td></td><td class="text-red-500 font-bold">$-$</td><td class="font-bold">0</td><td class="text-red-500 font-bold">$-$</td><td></td></tr>
+                            </table>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="exercice" class="tab-content">
+      <div class="card">
+        <h2 class="text-2xl font-bold text-indigo-900 mb-4 border-b pb-2">Tuteur Pédagogique</h2>
+        <p class="mb-6 text-slate-700">Résolvez l'équation suivante étape par étape. Si vous êtes bloqué, demandez un indice.</p>
+        
+        <div class="exercise-block shadow-sm">
+            <div class="text-3xl text-indigo-800 block text-center mb-8 font-bold" id="eq-display">
+                <!-- Equation injectée ici -->
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
+                <!-- Bloc 1 : Calculs -->
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                    <h3 class="font-bold text-indigo-800 border-b pb-2 mb-4">1. Discriminant et Racines</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label>Valeur de $\Delta$</label>
+                            <input type="number" id="in-delta" placeholder="Ex: 25">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label>Racine 1 ($x_1$)</label>
+                                <input type="number" step="0.1" id="in-x1" placeholder="La plus petite (ou double)">
+                            </div>
+                            <div>
+                                <label>Racine 2 ($x_2$)</label>
+                                <input type="number" step="0.1" id="in-x2" placeholder="(Vide si $\Delta=0$)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bloc 2 : Synthèse -->
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                    <h3 class="font-bold text-indigo-800 border-b pb-2 mb-4">2. Factorisation & Signe</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label>Forme factorisée $f(x)=$</label>
+                            <input type="text" id="in-facto" placeholder="Ex: (x-2)(x+3) ou -(x-1)^2" class="font-mono text-sm">
+                            <p class="text-xs text-slate-500 mt-1">N'oubliez pas le coefficient $a$ s'il est différent de 1 !</p>
+                        </div>
+                        <div>
+                            <label>Signes (de $-\infty$ à $+\infty$)</label>
+                            <div class="flex gap-2 items-center bg-white p-2 rounded border border-slate-300">
+                                <select id="in-sign1" class="font-bold text-center"><option value="">?</option><option value="+">+</option><option value="-">-</option></select>
+                                <span class="font-bold text-slate-400">0</span>
+                                <select id="in-sign2" class="font-bold text-center"><option value="">?</option><option value="+">+</option><option value="-">-</option></select>
+                                <span class="font-bold text-slate-400" id="sign-zero-2">0</span>
+                                <select id="in-sign3" class="font-bold text-center"><option value="">?</option><option value="+">+</option><option value="-">-</option></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-3 flex-wrap mt-8">
+                <button onclick="generateEq()" class="btn ghost text-indigo-900 border-indigo-200">Générer une équation</button>
+                <button onclick="checkAnswers()" class="btn solution">Vérifier mes réponses</button>
+                <button onclick="showNextHint()" class="btn alt">Indice 💡</button>
+                <button onclick="showDetailedSolution()" class="btn dark">Solution détaillée</button>
+            </div>
+            
+            <div id="feedback" class="result mt-6"></div>
+            <div id="hint-box" class="result info mt-4 space-y-2"></div>
+            <div id="solution-box" class="result warning mt-4"></div>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer-note">&copy; 2026 LIBOY D. / IPES de Hesbaye / Plateforme éducative interactive</p>
+  </div>
+
+  <script>
+    // --- GESTION DES ONGLETS (SPA) ---
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        document.getElementById(`btn-${tabId}`).classList.add('active');
+        if (window.MathJax) MathJax.typesetPromise();
+    }
+
+    // --- LOGIQUE DU TUTEUR PÉDAGOGIQUE ---
+    let currentEq = {};
+    let hintLevel = 0;
+    let hintsList = [];
+
+    // Formate l'affichage de l'équation ax^2 + bx + c
+    function formatEqString(a, b, c) {
+        let s = a === 1 ? "x^2" : (a === -1 ? "-x^2" : a + "x^2");
+        s += b > 0 ? " + " + (b===1?"x":b+"x") : (b < 0 ? " - " + (Math.abs(b)===1?"x":Math.abs(b)+"x") : "");
+        s += c > 0 ? " + " + c : (c < 0 ? " - " + Math.abs(c) : "");
+        return s;
+    }
+
+    function generateEq() {
+        // 25% de chance d'avoir une racine double
+        let isDeltaZero = Math.random() < 0.25; 
+        
+        let r1 = Math.floor(Math.random() * 11) - 5; // Racine entre -5 et 5
+        let r2 = isDeltaZero ? r1 : Math.floor(Math.random() * 11) - 5;
+        if(!isDeltaZero && r1 === r2) r2++; // Force deux racines distinctes si Delta > 0
+        
+        // Coefficient a aléatoire (-2, -1, 1, 2)
+        let possibleA = [-2, -1, 1, 2];
+        let a = possibleA[Math.floor(Math.random() * possibleA.length)];
+        
+        // Calcul de b et c à partir de 'a' et des racines (S = -b/a, P = c/a)
+        // a(x-r1)(x-r2) = ax^2 - a(r1+r2)x + a(r1*r2)
+        let b = -a * (r1 + r2);
+        let c = a * (r1 * r2);
+        
+        let delta = b*b - 4*a*c;
+        let x1 = Math.min(r1, r2);
+        let x2 = Math.max(r1, r2);
+
+        // --- GÉNÉRATION DES RÉPONSES ATTENDUES POUR LA FACTORISATION ---
+        let expectedFacto = [];
+        let formatTerm = (r) => r === 0 ? "x" : (r < 0 ? "(x+" + (-r) + ")" : "(x-" + r + ")");
+        let t1 = formatTerm(x1);
+        let t2 = formatTerm(x2);
+        
+        let prefix = "";
+        if (a === -1) prefix = "-";
+        else if (a !== 1) prefix = a.toString();
+
+        if (delta === 0) {
+            expectedFacto.push(`${prefix}${t1}^2`);
+            expectedFacto.push(`${prefix}(${t1})^2`);
+            if (x1 === 0) expectedFacto.push(`${prefix}x^2`);
+        } else {
+            expectedFacto.push(`${prefix}${t1}${t2}`);
+            expectedFacto.push(`${prefix}${t2}${t1}`);
+            // Si a est négatif, on accepte aussi -(...)(...) pour a=-1
+            if(a === -1) {
+                expectedFacto.push(`-1${t1}${t2}`);
+                expectedFacto.push(`-1${t2}${t1}`);
+            }
+        }
+
+        // --- RÉPONSES ATTENDUES POUR LES SIGNES ---
+        let s1, s2, s3;
+        if (delta > 0) {
+            s1 = a > 0 ? "+" : "-";
+            s2 = a > 0 ? "-" : "+"; // Signe contraire de a à l'intérieur
+            s3 = a > 0 ? "+" : "-";
+        } else {
+            s1 = a > 0 ? "+" : "-";
+            s2 = a > 0 ? "+" : "-"; // Garde le signe
+            s3 = "";
+        }
+
+        currentEq = {
+            a: a, b: b, c: c, delta: delta,
+            x1: x1, x2: delta === 0 ? "" : x2,
+            facto: expectedFacto,
+            s1: s1, s2: s2, s3: s3,
+            isDeltaZero: delta === 0
+        };
+        
+        // --- PRÉPARATION DES INDICES ---
+        hintLevel = 0;
+        hintsList = [
+            `<strong>Indice 1 (Coefficients) :</strong> Identifiez bien $a, b, c$. Ici, $a = ${a}$, $b = ${b}$ et $c = ${c}$.`,
+            `<strong>Indice 2 (Discriminant) :</strong> Appliquez $\\Delta = b^2 - 4ac = (${b})^2 - 4 \\times (${a}) \\times (${c})$.`,
+            `<strong>Indice 3 (Racines) :</strong> ${delta === 0 ? "Puisque $\\Delta=0$, il y a une racine double : $x_0 = \\frac{-b}{2a}$." : "Puisque $\\Delta > 0$, il y a deux racines distinctes : $x_1 = \\frac{-b - \\sqrt{\\Delta}}{2a}$ et $x_2 = \\frac{-b + \\sqrt{\\Delta}}{2a}$. Placez la plus petite dans le champ Racine 1."}`,
+            `<strong>Indice 4 (Factorisation) :</strong> N'oubliez pas le coefficient $a$ devant ! La formule est ${delta === 0 ? `$a(x-x_0)^2$` : `$a(x-x_1)(x-x_2)$`}.`,
+            `<strong>Indice 5 (Signes) :</strong> Le signe à l'extérieur des racines est TOUJOURS le signe de $a$ (ici $a$ est ${a>0 ? 'positif' : 'négatif'}).`
+        ];
+        
+        // --- MISE À JOUR DE L'UI ---
+        document.getElementById('eq-display').innerHTML = `$$ f(x) = ${formatEqString(a,b,c)} $$`;
+        
+        // Reset des inputs
+        ['in-delta', 'in-x1', 'in-x2', 'in-facto', 'in-sign1', 'in-sign2', 'in-sign3'].forEach(id => {
+            document.getElementById(id).value = '';
+            document.getElementById(id).classList.remove('border-red-500', 'border-green-500');
+        });
+        
+        // Ajustement UI si Delta = 0
+        if(delta === 0) {
+            document.getElementById('in-x2').disabled = true;
+            document.getElementById('in-x2').style.backgroundColor = '#f1f5f9';
+            document.getElementById('sign-zero-2').classList.add('hidden');
+            document.getElementById('in-sign3').classList.add('hidden');
+        } else {
+            document.getElementById('in-x2').disabled = false;
+            document.getElementById('in-x2').style.backgroundColor = 'white';
+            document.getElementById('sign-zero-2').classList.remove('hidden');
+            document.getElementById('in-sign3').classList.remove('hidden');
+        }
+
+        // Cacher les blocs de feedback
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('hint-box').style.display = 'none';
+        document.getElementById('hint-box').innerHTML = '';
+        document.getElementById('solution-box').style.display = 'none';
+        
+        if (window.MathJax) MathJax.typesetPromise();
+    }
+
+    // --- FONCTION DE VÉRIFICATION ---
+    function checkAnswers() {
+        let d = parseFloat(document.getElementById('in-delta').value);
+        let x1 = parseFloat(document.getElementById('in-x1').value);
+        let x2_str = document.getElementById('in-x2').value;
+        let x2 = x2_str === "" ? "" : parseFloat(x2_str);
+        
+        // Nettoyage factorisation
+        let factoRaw = document.getElementById('in-facto').value.replace(/\s/g, '').toLowerCase();
+        
+        let s1 = document.getElementById('in-sign1').value;
+        let s2 = document.getElementById('in-sign2').value;
+        let s3 = document.getElementById('in-sign3').value;
+
+        // Validations
+        let isDeltaOk = (d === currentEq.delta);
+        let isX1Ok = (x1 === currentEq.x1);
+        let isX2Ok = (x2 === currentEq.x2);
+        let isFactoOk = currentEq.facto.includes(factoRaw);
+        
+        let isSignsOk = currentEq.isDeltaZero 
+                        ? (s1 === currentEq.s1 && s2 === currentEq.s2) 
+                        : (s1 === currentEq.s1 && s2 === currentEq.s2 && s3 === currentEq.s3);
+
+        // Feedback visuel sur les inputs (Optionnel mais apprécié par les élèves)
+        const applyStatus = (id, isValid) => {
+            const el = document.getElementById(id);
+            if(el.value !== "") {
+                el.classList.remove('border-red-500', 'border-green-500');
+                el.classList.add(isValid ? 'border-green-500' : 'border-red-500');
+            }
+        };
+        applyStatus('in-delta', isDeltaOk);
+        applyStatus('in-x1', isX1Ok);
+        if(!currentEq.isDeltaZero) applyStatus('in-x2', isX2Ok);
+        applyStatus('in-facto', isFactoOk);
+
+        let fb = document.getElementById('feedback');
+        fb.style.display = 'block';
+
+        let errors = [];
+        if (!isDeltaOk) errors.push("le $\\Delta$");
+        if (!isX1Ok || (!currentEq.isDeltaZero && !isX2Ok)) errors.push(currentEq.isDeltaZero ? "la racine" : "les racines");
+        if (!isFactoOk) errors.push("la forme factorisée");
+        if (!isSignsOk) errors.push("les signes");
+
+        if(errors.length === 0) {
+            fb.className = 'result ok';
+            fb.innerHTML = "<h3>✅ Excellent travail !</h3><p>Toute votre analyse (Delta, Racines, Factorisation, Signes) est parfaitement exacte.</p>";
+        } else {
+            fb.className = 'result bad';
+            fb.innerHTML = `<h3>❌ Il y a des erreurs.</h3><p>Vérifiez : <strong>${errors.join(", ")}</strong>. N'hésitez pas à demander un indice !</p>`;
+        }
+        if (window.MathJax) MathJax.typesetPromise();
+    }
+
+    // --- GESTION DES INDICES ---
+    function showNextHint() {
+        let box = document.getElementById('hint-box');
+        box.style.display = 'block';
+        
+        if (hintLevel < hintsList.length) {
+            box.innerHTML += `<p>${hintsList[hintLevel]}</p>`;
+            hintLevel++;
+            if (window.MathJax) MathJax.typesetPromise([box]);
+        } else if (!box.innerHTML.includes("Tous les indices")) {
+            box.innerHTML += `<p class="italic text-sm text-sky-800 mt-2 pt-2 border-t border-sky-200">Tous les indices ont été donnés. Si vous êtes toujours bloqué, consultez la solution détaillée.</p>`;
+        }
+    }
+
+    // --- SOLUTION DÉTAILLÉE ---
+    function showDetailedSolution() {
+        let box = document.getElementById('solution-box');
+        box.style.display = 'block';
+        box.className = 'result info'; // Style bleu pour la solution
+        
+        let factoShow = currentEq.facto[0].replace(/\^2/g, '^{2}'); 
+
+        let b_sq = currentEq.b * currentEq.b;
+        let four_ac = 4 * currentEq.a * currentEq.c;
+        let delta_calc = `\\Delta = (${currentEq.b})^2 - 4(${currentEq.a})(${currentEq.c}) = ${b_sq} - (${four_ac}) = ${currentEq.delta}`;
+        
+        let rootsHTML = "";
+        if (currentEq.isDeltaZero) {
+            rootsHTML = `<p>Comme $\\Delta = 0$, il y a une racine double :</p>
+                         <p class="text-center bg-white p-2 border rounded my-2">$x_0 = \\frac{-(${currentEq.b})}{2(${currentEq.a})} = ${currentEq.x1}$</p>`;
+        } else {
+            rootsHTML = `<p>Comme $\\Delta > 0$, il y a deux racines distinctes :</p>
+                         <div class="grid grid-cols-2 gap-4 my-2 text-center">
+                            <div class="bg-white p-2 border rounded">$x_1 = \\frac{-(${currentEq.b}) - \\sqrt{${currentEq.delta}}}{2(${currentEq.a})} = ${currentEq.x1}$</div>
+                            <div class="bg-white p-2 border rounded">$x_2 = \\frac{-(${currentEq.b}) + \\sqrt{${currentEq.delta}}}{2(${currentEq.a})} = ${currentEq.x2}$</div>
+                         </div>`;
+        }
+
+        let signExplanation = currentEq.isDeltaZero 
+            ? `<p>Le coefficient $a$ vaut ${currentEq.a} (${currentEq.a > 0 ? 'positif' : 'négatif'}). Le trinôme garde ce signe partout (sauf en $x_0$ où il s'annule).</p>
+               <p class="text-center font-bold font-mono mt-2">${currentEq.s1} &nbsp;&nbsp;|&nbsp;&nbsp; 0 &nbsp;&nbsp;|&nbsp;&nbsp; ${currentEq.s2}</p>`
+            : `<p>Le coefficient $a$ vaut ${currentEq.a} (${currentEq.a > 0 ? 'positif' : 'négatif'}). Le trinôme prend le signe de $a$ <strong>à l'extérieur</strong> des racines.</p>
+               <p class="text-center font-bold font-mono mt-2">${currentEq.s1} &nbsp;&nbsp;|&nbsp;&nbsp; 0 &nbsp;&nbsp;|&nbsp;&nbsp; ${currentEq.s2} &nbsp;&nbsp;|&nbsp;&nbsp; 0 &nbsp;&nbsp;|&nbsp;&nbsp; ${currentEq.s3}</p>`;
+
+        box.innerHTML = `
+            <h3 class="border-b border-sky-200 pb-2 mb-4">💡 Solution détaillée étape par étape</h3>
+            
+            <div class="space-y-4 text-slate-800">
+                <div>
+                    <strong class="text-sky-800">1. Discriminant ($\\Delta$)</strong>
+                    <p>On identifie les coefficients : $a = ${currentEq.a}$, $b = ${currentEq.b}$, $c = ${currentEq.c}$.</p>
+                    <p class="text-center bg-white p-2 border rounded my-2">$${delta_calc}$</p>
+                </div>
+                
+                <div>
+                    <strong class="text-sky-800">2. Racines</strong>
+                    ${rootsHTML}
+                </div>
+                
+                <div>
+                    <strong class="text-sky-800">3. Factorisation</strong>
+                    <p>La formule est ${currentEq.isDeltaZero ? `$a(x - x_0)^2$` : `$a(x - x_1)(x - x_2)$`}.</p>
+                    <p class="text-center bg-white p-2 border rounded my-2">$f(x) = ${factoShow}$</p>
+                </div>
+                
+                <div>
+                    <strong class="text-sky-800">4. Tableau de signes</strong>
+                    ${signExplanation}
+                </div>
+            </div>`;
+            
+        if (window.MathJax) MathJax.typesetPromise([box]);
+        
+        // Cacher les feedbacks d'erreur et les indices pour clarifier la vue
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('hint-box').style.display = 'none';
+    }
+
+    // Initialisation au chargement
+    window.onload = generateEq;
+
+  </script>
+</body>
+</html>

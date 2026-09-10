@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPES de Hesbaye - UAA4: Exercices – LIBOY D.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- MathJax -->
+  <script>
+      window.MathJax = {
+          tex: {
+              inlineMath: [['$', '$'], ['\\(', '\\)']],
+              displayMath: [['$$', '$$'], ['\\[', '\\]']]
+          },
+          svg: { fontCache: 'global' }
+      };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root{
+      --bg1:#0f172a; --bg2:#1d4ed8; --bg3:#7c3aed;
+      --card:#ffffffee; --text:#14213d; --muted:#475569;
+      --accent:#f97316; --accent2:#14b8a6; --ok:#16a34a; --bad:#dc2626;
+      --shadow:0 18px 40px rgba(15,23,42,.18);
+      --radius:22px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; font-family: Arial, Helvetica, sans-serif; color: var(--text);
+      background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+      min-height: 100vh;
+    }
+    .main-container { width: min(1180px, 92vw); margin: 0 auto; padding: 26px 0 40px; }
+    
+    .hero {
+      background: linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
+      border: 1px solid rgba(255,255,255,.16);
+      color: white; border-radius: 30px; padding: 28px; box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .hero h1 { margin: 0 0 10px; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: bold; }
+    .hero h2 { margin: 0 0 8px; font-size: 1.5rem; font-weight: bold; }
+    .hero p { margin: .35rem 0; line-height: 1.6; }
+    
+    .card { background: var(--card); border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow); margin-bottom: 24px;}
+    .badge { display: inline-block; padding: 6px 12px; border-radius: 999px; font-weight: bold; font-size: .85rem; color: white; background: linear-gradient(90deg, #f9ca24, #f39c12); }
+    .topbar { display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 18px; }
+    
+    .btn { border: none; cursor: pointer; border-radius: 999px; padding: 12px 24px; font-weight: 700; background: linear-gradient(90deg, var(--accent), #fb7185); color: white; box-shadow: var(--shadow); text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+    .btn.alt { background: linear-gradient(90deg, var(--accent2), #38bdf8); }
+    .btn.solution { background: linear-gradient(90deg, #8b5cf6, #d946ef); }
+    .btn.dark { background: linear-gradient(90deg, #334155, #0f172a); }
+    .btn.ghost { background: #eef2ff; color: #1e293b; box-shadow: none; border: 1px solid #cbd5e1; }
+    
+    .exercise-block { border: 1px solid #e2e8f0; border-radius: 18px; padding: 20px; background: #fff; margin-top: 18px; }
+    .result { padding: 16px; border-radius: 14px; margin-top: 20px; font-weight: normal; display: none; }
+    .result h3 { margin-top: 0; color: #1e293b; margin-bottom: 8px;}
+    .ok { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0;}
+    .bad { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;}
+    .info { background: #e0f2fe; color: #075985; border: 1px solid #bae6fd;}
+    .warning { background: #fef3c7; color: #92400e; border: 1px solid #fde68a;}
+    
+    input, select { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; width: 100%; outline: none;}
+    input:focus, select:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2); }
+    label { font-weight: bold; display: block; margin-bottom: 4px; color: #334155; font-size: 0.9rem;}
+    
+    .footer-note { color: white; opacity: .9; text-align: center; padding: 10px; }
+    
+    /* Navigation Tabs */
+    .tabs { display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 6px; }
+    .tab-btn { 
+        background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.25); 
+        color: white; padding: 10px 20px; border-radius: 999px; font-weight: bold; 
+        white-space: nowrap; transition: all 0.2s; backdrop-filter: blur(10px); cursor: pointer;
+        text-decoration: none;
+    }
+    .tab-btn:hover { background: rgba(255, 255, 255, 0.25); }
+    .tab-btn.active { background: white; color: var(--text); box-shadow: var(--shadow); }
+
+    /* Type Selector */
+    .type-selector { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+    .type-btn { padding: 8px 16px; border-radius: 8px; border: 1px solid #cbd5e1; background: white; color: #334155; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+    .type-btn:hover { background: #f8fafc; }
+    .type-btn.active { background: #1e40af; color: white; border-color: #1e40af; }
+  </style>
+</head>
+<body>
+  <div class="main-container">
+    <div class="topbar">
+      <a class="btn ghost" style="background: rgba(255,255,255,0.2); color: white; border: none; backdrop-filter: blur(5px);" href="index.html">⟵ Retour à l'accueil</a>
+      <span class="badge">UAA4</span>
+    </div>
+
+    <section class="hero">
+      <h2>IPES DE HESBAYE - MATHEMATIQUES (5H) - 4TT</h2>
+      <h2>CHAPITRE 4: Fonctions de référence (Dérivées)</h2>
+      <p>LIBOY D.</p>
+    </section>
+    
+    <br>
+    
+    <nav class="tabs">
+      <a href="uaa4.html" class="tab-btn">Formules</a>
+      <a href="uaa4_exercices.html" class="tab-btn active">Exercices</a>
+      <a href="uaa4_videos.html" class="tab-btn">Vidéos</a>
+    </nav>
+
+    <section class="card">
+      <h2 class="text-2xl font-bold text-indigo-900 mb-4 border-b pb-2">Tuteur Pédagogique - Calcul de Dérivées</h2>
+      <p class="mb-4 text-slate-700">Sélectionnez un type d'exercice pour vous entraîner pas à pas. Le tuteur vous corrigera et vous guidera.</p>
+
+      <div class="type-selector">
+          <button class="type-btn active" onclick="setExerciseType(1)" id="btn-type-1">1. Fonctions usuelles</button>
+          <button class="type-btn" onclick="setExerciseType(2)" id="btn-type-2">2. Opérations (Produit, Quotient, Chaîne)</button>
+          <button class="type-btn" onclick="setExerciseType(3)" id="btn-type-3">3. Dérivées première et seconde (Tableaux & Inflexion)</button>
+      </div>
+
+      <div class="exercise-block shadow-sm">
+          <div class="text-2xl text-indigo-800 block text-center mb-6 font-bold" id="func-display">
+              <!-- La fonction sera injectée ici -->
+          </div>
+          
+          <div id="exercise-content">
+              <!-- Le contenu de l'exercice (inputs) sera injecté ici selon le type -->
+          </div>
+
+          <div class="flex gap-3 flex-wrap mt-8">
+              <button onclick="generateExercise()" class="btn ghost text-indigo-900 border-indigo-200 hover:bg-indigo-50">Nouveau calcul</button>
+              <button onclick="checkAnswer()" class="btn solution">Vérifier</button>
+              <button onclick="showHint()" class="btn alt">Indice 💡</button>
+              <button onclick="showSolution()" class="btn dark">Solution détaillée</button>
+          </div>
+          
+          <div id="feedback" class="result mt-6"></div>
+          <div id="hint-box" class="result info mt-4 space-y-2"></div>
+          <div id="solution-box" class="result warning mt-4"></div>
+      </div>
+    </section>
+    
+    <p class="footer-note">&copy; 2026 LIBOY D. / IPES de Hesbaye / Plateforme éducative interactive</p>
+  </div>
+
+  <script>
+    let currentType = 1;
+    let currentExercise = {};
+    let hintLevel = 0;
+
+    function setExerciseType(type) {
+        currentType = type;
+        document.querySelectorAll('.type-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`btn-type-${type}`).classList.add('active');
+        generateExercise();
+    }
+
+    // --- Générateurs de mathématiques ---
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    
+    function getRandomNonZeroInt(min, max) {
+        let val = 0;
+        while(val === 0) {
+            val = getRandomInt(min, max);
+        }
+        return val;
+    }
+
+    function formatTerm(coef, power, isFirst = false) {
+        if (coef === 0) return "";
+        let str = "";
+        
+        if (coef < 0) {
+            str += isFirst ? "-" : " - ";
+        } else if (!isFirst) {
+            str += " + ";
+        }
+        
+        let absCoef = Math.abs(coef);
+        if (power === 0) return str + absCoef;
+        if (absCoef !== 1) str += absCoef;
+        if (power === 1) str += "x";
+        else str += "x^{" + power + "}";
+        
+        return str;
+    }
+
+    function cleanMathString(str) {
+        return str.replace(/\s/g, '').toLowerCase().replace(/\*\*/g, '^');
+    }
+
+    // --- Génération des exercices ---
+    function generateExercise() {
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('hint-box').style.display = 'none';
+        document.getElementById('solution-box').style.display = 'none';
+        hintLevel = 0;
+
+        const funcDisplay = document.getElementById('func-display');
+        const exContent = document.getElementById('exercise-content');
+
+        if (currentType === 1) {
+            const subtypes = ['power', 'inverse', 'sqrt', 'exp_ln'];
+            const subtype = subtypes[getRandomInt(0, 3)];
+            
+            let a = getRandomNonZeroInt(-5, 5);
+            let n = getRandomNonZeroInt(2, 6);
+            
+            let funcStr = "";
+            let expectedDeriv = "";
+            let expectedDerivAlts = [];
+            let hints = [];
+            let sol = "";
+
+            if (subtype === 'power') {
+                funcStr = `f(x) = ${a === 1 ? '' : (a === -1 ? '-' : a)}x^{${n}}`;
+                let coef = a * n;
+                expectedDeriv = `${coef}x^${n-1}`;
+                if(n-1 === 1) expectedDeriv = `${coef}x`;
+                expectedDerivAlts.push(expectedDeriv.replace('^', '**'));
+                
+                hints = [
+                    "Rappel : La dérivée de $x^n$ est $n \\cdot x^{n-1}$.",
+                    `Ici, la constante multiplicative est $a = ${a}$ et la puissance est $n = ${n}$.`,
+                    `Le calcul est donc : ${a} $\\cdot$ (${n}x^{${n}-1}).`
+                ];
+                sol = `On utilise la formule $(kx^n)' = k \\cdot n \\cdot x^{n-1}$.<br>
+                       Ici, $f'(x) = ${a} \\cdot ${n}x^{${n}-1} = ${coef}x^{${n-1 === 1 ? '' : n-1}}$.`;
+            } else if (subtype === 'inverse') {
+                funcStr = `f(x) = \\frac{${a}}{x}`;
+                expectedDeriv = `-${a}/x^2`;
+                expectedDerivAlts = [`-${a}/(x^2)`, `${-a}/x^2`, `-${a}x^-2`];
+                if(a<0) {
+                    expectedDeriv = `${Math.abs(a)}/x^2`;
+                    expectedDerivAlts = [`${Math.abs(a)}/(x^2)`];
+                }
+
+                hints = [
+                    "Rappel : La dérivée de $\\frac{1}{x}$ est $-\\frac{1}{x^2}$.",
+                    `La fonction peut s'écrire $f(x) = ${a} \\cdot \\frac{1}{x}$.`
+                ];
+                sol = `On utilise la formule $(\\frac{k}{x})' = -\\frac{k}{x^2}$.<br>
+                       $f'(x) = ${a} \\cdot (-\\frac{1}{x^2}) = \\frac{${-a}}{x^2}$.`;
+            } else if (subtype === 'sqrt') {
+                funcStr = `f(x) = ${a === 1 ? '' : (a === -1 ? '-' : a)}\\sqrt{x}`;
+                expectedDeriv = `${a}/(2\\sqrt{x})`;
+                expectedDerivAlts = [`${a}/(2sqrt(x))`];
+                
+                hints = [
+                    "Rappel : La dérivée de $\\sqrt{x}$ est $\\frac{1}{2\\sqrt{x}}$.",
+                    `La constante multiplicatrice reste devant la dérivée.`
+                ];
+                sol = `On utilise la formule $(k\\sqrt{x})' = k \\cdot \\frac{1}{2\\sqrt{x}}$.<br>
+                       $f'(x) = ${a} \\cdot \\frac{1}{2\\sqrt{x}} = \\frac{${a}}{2\\sqrt{x}}$.`;
+            } else {
+                 if(getRandomInt(0,1) === 0){
+                    funcStr = `f(x) = ${a === 1 ? '' : (a === -1 ? '-' : a)}e^x`;
+                    expectedDeriv = `${a}e^x`;
+                    expectedDerivAlts = [`${a}*e^x`];
+                    hints = ["Rappel : La dérivée de $e^x$ est $e^x$."];
+                    sol = `La dérivée de l'exponentielle est elle-même. $f'(x) = ${a}e^x$.`;
+                 } else {
+                    funcStr = `f(x) = ${a === 1 ? '' : (a === -1 ? '-' : a)}\\ln(x)`;
+                    expectedDeriv = `${a}/x`;
+                    expectedDerivAlts = [`${a}*1/x`];
+                    hints = ["Rappel : La dérivée de $\\ln(x)$ est $\\frac{1}{x}$."];
+                    sol = `La dérivée du logarithme népérien est $\\frac{1}{x}$. $f'(x) = \\frac{${a}}{x}$.`;
+                 }
+            }
+
+            currentExercise = { type: 1, funcStr, expectedDeriv, expectedDerivAlts, hints, sol };
+
+            funcDisplay.innerHTML = `$$ ${funcStr} $$`;
+            exContent.innerHTML = `
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                    <label>Dérivée $f'(x)$ =</label>
+                    <input type="text" id="in-deriv" placeholder="Ex: 3x^2, -4/x^2, 5/(2sqrt(x))" class="font-mono mt-2">
+                    <p class="text-xs text-slate-500 mt-2">Utilisez <strong>^</strong> pour les puissances et <strong>sqrt(x)</strong> pour la racine carrée.</p>
+                </div>
+            `;
+        } 
+        else if (currentType === 2) {
+            const subtypes = ['product', 'quotient'];
+            const subtype = subtypes[getRandomInt(0, 1)];
+            
+            let funcStr = "";
+            let hints = [];
+            let sol = "";
+
+            if (subtype === 'product') {
+                let a = getRandomNonZeroInt(1, 4);
+                let b = getRandomNonZeroInt(-5, 5);
+                let c = getRandomNonZeroInt(1, 4);
+                let d = getRandomNonZeroInt(-5, 5);
+                
+                funcStr = `f(x) = (${formatTerm(a, 1, true)}${formatTerm(b, 0)})(${formatTerm(c, 1, true)}${formatTerm(d, 0)})`;
+                
+                let u = `${a}x${b>=0?'+'+b:b}`;
+                let v = `${c}x${d>=0?'+'+d:d}`;
+                let up = `${a}`;
+                let vp = `${c}`;
+                
+                let coef_x = 2 * a * c;
+                let indep = (a * d) + (b * c);
+                
+                let expectedDeriv = `${coef_x}x${indep>=0?'+'+indep:indep}`;
+                if(indep === 0) expectedDeriv = `${coef_x}x`;
+
+                hints = [
+                    "Il s'agit d'un produit $u \\cdot v$. La formule est $(u \\cdot v)' = u'v + uv'$.",
+                    `Posez $u = ${u}$ et $v = ${v}$.`,
+                    `Calculez d'abord $u' = ${up}$ et $v' = ${vp}$.`,
+                    `Appliquez la formule : ${up}(${v}) + (${u})${vp} puis développez.`
+                ];
+                sol = `Formule du produit : $(uv)' = u'v + uv'$.<br>
+                       $u(x) = ${u} \\Rightarrow u'(x) = ${up}$<br>
+                       $v(x) = ${v} \\Rightarrow v'(x) = ${vp}$<br>
+                       $f'(x) = ${up}(${v}) + (${u})${vp}$<br>
+                       $f'(x) = ${a*c}x + ${a*d} + ${a*c}x + ${b*c}$<br>
+                       $f'(x) = ${coef_x}x ${indep>=0?'+'+indep:indep}$`;
+                       
+                currentExercise = { type: 2, funcStr, expectedDeriv, expectedDerivAlts: [], hints, sol };
+                
+                funcDisplay.innerHTML = `$$ ${funcStr} $$`;
+                exContent.innerHTML = `
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                        <label>Dérivée développée $f'(x)$ =</label>
+                        <input type="text" id="in-deriv" placeholder="Ex: 4x+2" class="font-mono mt-2">
+                        <p class="text-xs text-slate-500 mt-2">Donnez la réponse sous forme développée et réduite ($ax+b$).</p>
+                    </div>
+                `;
+            } else {
+                let a = getRandomNonZeroInt(1, 4);
+                let b = getRandomNonZeroInt(-5, 5);
+                let c = 1; 
+                let d = getRandomNonZeroInt(-5, 5);
+                if (d===0) d=2;
+                
+                funcStr = `f(x) = \\frac{${formatTerm(a, 1, true)}${formatTerm(b, 0)}}{x${formatTerm(d, 0)}}`;
+                
+                let u = `${a}x${b>=0?'+'+b:b}`;
+                let v = `x${d>=0?'+'+d:d}`;
+                let up = `${a}`;
+                let vp = `1`;
+                
+                let num_final = (a * d) - b;
+                
+                hints = [
+                    "Il s'agit d'un quotient $\\frac{u}{v}$. La formule est $(\\frac{u}{v})' = \\frac{u'v - uv'}{v^2}$.",
+                    `Posez $u = ${u}$ et $v = ${v}$.`,
+                    `Calculez $u' = ${up}$ et $v' = ${vp}$.`,
+                    `Le numérateur sera : $u'v - uv' = ${up}(${v}) - (${u})(${vp})$. Développez-le.`
+                ];
+                sol = `Formule du quotient : $(\\frac{u}{v})' = \\frac{u'v - uv'}{v^2}$.<br>
+                       $u(x) = ${u} \\Rightarrow u'(x) = ${up}$<br>
+                       $v(x) = ${v} \\Rightarrow v'(x) = ${vp}$<br>
+                       Numérateur : $u'v - uv' = ${up}(${v}) - (${u})(${vp}) = ${a}x + ${a*d} - ${a}x - ${b} = ${num_final}$.<br>
+                       $f'(x) = \\frac{${num_final}}{(${v})^2}$`;
+                       
+                currentExercise = { type: 2, subtype: 'quotient', funcStr, num_final: num_final.toString(), hints, sol };
+                
+                funcDisplay.innerHTML = `$$ ${funcStr} $$`;
+                exContent.innerHTML = `
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                        <p class="mb-4 text-slate-700">La dérivée sera de la forme $f'(x) = \\frac{\\text{Numérateur}}{(x${formatTerm(d, 0)})^2}$.</p>
+                        <label>Valeur du Numérateur final (après réduction) :</label>
+                        <input type="text" id="in-deriv-num" placeholder="Un nombre entier" class="font-mono mt-2">
+                    </div>
+                `;
+            }
+        }
+        else if (currentType === 3) {
+            // Type 3 : Dérivées 1 et 2 + Tableaux de signe, variations et concavité
+            let r1 = getRandomInt(-3, 3);
+            let r2 = getRandomInt(-3, 3);
+            while(r1 === r2) r2 = getRandomInt(-3, 3);
+            if(r1 > r2) { let temp = r1; r1 = r2; r2 = temp; }
+            
+            let deriv_b = -3 * (r1 + r2);
+            let deriv_c = 3 * r1 * r2;
+            
+            while((r1 + r2) % 2 !== 0) {
+                r2 = getRandomInt(-4, 4);
+                if(r1 > r2) { let temp = r1; r1 = r2; r2 = temp; }
+            }
+            
+            let f_b = -1.5 * (r1 + r2);
+            let f_c = 3 * r1 * r2;
+            let f_d = getRandomInt(-5, 5);
+            
+            funcStr = `f(x) = x^3 ${formatTerm(f_b, 2)} ${formatTerm(f_c, 1)} ${formatTerm(f_d, 0)}`;
+            
+            let fpStr = `3x^2 ${formatTerm(deriv_b, 1)} ${formatTerm(deriv_c, 0)}`;
+            let fppStr = `6x ${formatTerm(deriv_b, 0)}`;
+            let inflexionX = (r1 + r2) / 2;
+
+            hints = [
+                "Étape 1 : Calculez la dérivée première $f'(x) = 3x^2 + ...$",
+                `$f'(x) = ${fpStr}$. Résolvez $f'(x) = 0$ pour trouver les racines $x_1$ et $x_2$.`,
+                "Étape 2 : Pour le tableau de signes de $f'(x)$, le coefficient dominant de $f'(x)$ est positif ($+3$), donc $f'(x)$ est positif à l'extérieur des racines et négatif à l'intérieur.",
+                `Étape 3 : Calculez la dérivée seconde $f''(x) = ${fppStr}$, puis trouvez l'abscisse du point d'inflexion où $f''(x) = 0$.`
+            ];
+            
+            sol = `1) Dérivée première : $f'(x) = ${fpStr}$<br>
+                   2) Racines de $f'(x)$ : $x_1 = ${r1}$ et $x_2 = ${r2}$.<br>
+                   &nbsp;&nbsp;&nbsp;&nbsp;<strong>Tableau de signes de $f'(x)$ & Variations :</strong><br>
+                   &nbsp;&nbsp;&nbsp;&nbsp;- Sur $]-\\infty, ${r1}[$ : $f'(x) > 0$ ($\nearrow$)<br>
+                   &nbsp;&nbsp;&nbsp;&nbsp;- En $x = ${r1}$ : Maximum local<br>
+                   &nbsp;&nbsp;&nbsp;&nbsp;- Sur $]${r1}, ${r2}[$ : $f'(x) < 0$ ($\searrow$)<br>
+                   &nbsp;&nbsp;&nbsp;&nbsp;- En $x = ${r2}$ : Minimum local<br>
+                   &nbsp;&nbsp;&nbsp;&nbsp;- Sur $]${r2}, +\\infty[$ : $f'(x) > 0$ ($\nearrow$)<br>
+                   3) Dérivée seconde : $f''(x) = ${fppStr}$<br>
+                   4) Point d'inflexion : $f''(x) = 0 \\Rightarrow x = ${inflexionX}$<br>
+                   &nbsp;&nbsp;&nbsp;&nbsp;<strong>Convexité :</strong> Concave ($\cap$) avant ${inflexionX}, Convexe ($\cup$) après ${inflexionX}.`;
+                   
+            currentExercise = { 
+                type: 3, 
+                funcStr, 
+                r1: r1.toString(), 
+                r2: r2.toString(), 
+                inflexion: inflexionX.toString(), 
+                signInside: "-", 
+                signOutside: "+",
+                concavityBefore: "concave",
+                concavityAfter: "convexe",
+                hints, 
+                sol 
+            };
+            
+            funcDisplay.innerHTML = `$$ ${funcStr} $$`;
+            exContent.innerHTML = `
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-6">
+                    <div>
+                        <p class="text-slate-700 font-bold mb-2">1. Racines de la dérivée première $f'(x) = 0$ :</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label>Racine 1 (la plus petite) :</label>
+                                <input type="number" id="in-r1" class="mt-1">
+                            </div>
+                            <div>
+                                <label>Racine 2 (la plus grande) :</label>
+                                <input type="number" id="in-r2" class="mt-1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-200">
+                        <p class="text-slate-700 font-bold mb-2">2. Tableau de signes de $f'(x)$ et Variations :</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label>Signe de $f'(x)$ entre les racines $x_1$ et $x_2$ :</label>
+                                <select id="in-sign-inside" class="mt-1">
+                                    <option value="">-- Choisir --</option>
+                                    <option value="+">Positif (+)</option>
+                                    <option value="-">Négatif (-)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>En $x_1$, la fonction admet un :</label>
+                                <select id="in-ext1" class="mt-1">
+                                    <option value="">-- Choisir --</option>
+                                    <option value="max">Maximum local</option>
+                                    <option value="min">Minimum local</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-4 border-t border-slate-200">
+                        <p class="text-slate-700 font-bold mb-2">3. Dérivée seconde et Concavité :</p>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div>
+                                <label>Abscisse $x$ du point d'inflexion :</label>
+                                <input type="number" step="any" id="in-inflexion" class="mt-1">
+                            </div>
+                            <div>
+                                <label>Concavité avant l'inflexion :</label>
+                                <select id="in-conc-before" class="mt-1">
+                                    <option value="">-- Choisir --</option>
+                                    <option value="concave">Concave (∩)</option>
+                                    <option value="convexe">Convexe (∪)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Concavité après l'inflexion :</label>
+                                <select id="in-conc-after" class="mt-1">
+                                    <option value="">-- Choisir --</option>
+                                    <option value="concave">Concave (∩)</option>
+                                    <option value="convexe">Convexe (∪)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        if (window.MathJax) MathJax.typesetPromise();
+    }
+
+    function checkAnswer() {
+        const fb = document.getElementById('feedback');
+        fb.style.display = 'block';
+        let isCorrect = false;
+
+        if (currentExercise.type === 1) {
+            const userInput = cleanMathString(document.getElementById('in-deriv').value);
+            const expected = cleanMathString(currentExercise.expectedDeriv);
+            
+            isCorrect = (userInput === expected);
+            if (!isCorrect && currentExercise.expectedDerivAlts) {
+                for (let alt of currentExercise.expectedDerivAlts) {
+                    if (userInput === cleanMathString(alt)) isCorrect = true;
+                }
+            }
+        } 
+        else if (currentExercise.type === 2) {
+            if (currentExercise.subtype === 'quotient') {
+                const userInput = document.getElementById('in-deriv-num').value.trim();
+                isCorrect = (userInput === currentExercise.num_final);
+            } else {
+                const userInput = cleanMathString(document.getElementById('in-deriv').value);
+                const expected = cleanMathString(currentExercise.expectedDeriv);
+                isCorrect = (userInput === expected);
+            }
+        }
+        else if (currentExercise.type === 3) {
+            const r1 = document.getElementById('in-r1').value.trim();
+            const r2 = document.getElementById('in-r2').value.trim();
+            const signInside = document.getElementById('in-sign-inside').value;
+            const ext1 = document.getElementById('in-ext1').value;
+            const inf = document.getElementById('in-inflexion').value.trim();
+            const concBefore = document.getElementById('in-conc-before').value;
+            const concAfter = document.getElementById('in-conc-after').value;
+            
+            isCorrect = (
+                r1 === currentExercise.r1 && 
+                r2 === currentExercise.r2 && 
+                signInside === currentExercise.signInside &&
+                ext1 === "max" &&
+                inf === currentExercise.inflexion &&
+                concBefore === currentExercise.concavityBefore &&
+                concAfter === currentExercise.concavityAfter
+            );
+        }
+
+        if (isCorrect) {
+            fb.className = 'result ok';
+            fb.innerHTML = '<h3>✅ Excellent !</h3><p>Toutes vos réponses (racines, tableau de signes, variations et concavité) sont parfaitement exactes.</p>';
+        } else {
+            fb.className = 'result bad';
+            fb.innerHTML = '<h3>❌ Erreur.</h3><p>Une ou plusieurs réponses sont incorrectes. Vérifiez vos calculs de dérivées ou demandez un indice.</p>';
+        }
+    }
+
+    function showHint() {
+        if (!currentExercise.hints || currentExercise.hints.length === 0) return;
+        
+        const box = document.getElementById('hint-box');
+        box.style.display = 'block';
+        
+        if (hintLevel < currentExercise.hints.length) {
+            box.innerHTML += `<p>💡 ${currentExercise.hints[hintLevel]}</p>`;
+            hintLevel++;
+            if (window.MathJax) MathJax.typesetPromise([box]);
+        } else if (!box.innerHTML.includes("Tous les indices")) {
+            box.innerHTML += `<p class="italic text-sm text-sky-800 mt-2 pt-2 border-t border-sky-200">Tous les indices ont été donnés.</p>`;
+        }
+    }
+
+    function showSolution() {
+        const box = document.getElementById('solution-box');
+        box.style.display = 'block';
+        box.innerHTML = `<h3>Solution détaillée :</h3><p class="text-slate-800 leading-relaxed">${currentExercise.sol}</p>`;
+        if (window.MathJax) MathJax.typesetPromise([box]);
+    }
+
+    window.onload = generateExercise;
+  </script>
+</body>
+</html>

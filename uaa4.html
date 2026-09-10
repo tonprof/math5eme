@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPES de Hesbaye - UAA4: Dérivées – LIBOY D.</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- MathJax -->
+  <script>
+      window.MathJax = {
+          tex: {
+              inlineMath: [['$', '$'], ['\\(', '\\)']],
+              displayMath: [['$$', '$$'], ['\\[', '\\]']]
+          },
+          svg: { fontCache: 'global' }
+      };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root{
+      --bg1:#0f172a; --bg2:#1d4ed8; --bg3:#7c3aed;
+      --card:#ffffffee; --text:#14213d; --muted:#475569;
+      --accent:#f97316; --accent2:#14b8a6; --ok:#16a34a; --bad:#dc2626;
+      --shadow:0 18px 40px rgba(15,23,42,.18);
+      --radius:22px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; font-family: Arial, Helvetica, sans-serif; color: var(--text);
+      background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+      min-height: 100vh;
+    }
+    .main-container { width: min(1180px, 92vw); margin: 0 auto; padding: 26px 0 40px; }
+    
+    .hero {
+      background: linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
+      border: 1px solid rgba(255,255,255,.16);
+      color: white; border-radius: 30px; padding: 28px; box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .hero h1 { margin: 0 0 10px; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: bold; }
+    .hero h2 { margin: 0 0 8px; font-size: 1.5rem; font-weight: bold; }
+    .hero p { margin: .35rem 0; line-height: 1.6; }
+    
+    .card {
+      background: var(--card); border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+    
+    .badge { display: inline-block; padding: 6px 12px; border-radius: 999px; font-weight: bold; font-size: .85rem; color: white; background: linear-gradient(90deg, #f9ca24, #f39c12); }
+    .topbar { display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 18px; }
+    
+    .btn {
+      border: none; cursor: pointer; border-radius: 999px; padding: 12px 24px; font-weight: 700;
+      background: linear-gradient(90deg, var(--accent), #fb7185); color: white; box-shadow: var(--shadow); text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+    .btn.ghost { background: #eef2ff; color: #1e293b; box-shadow: none; border: 1px solid #cbd5e1; }
+    
+    .tabs { display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 6px; }
+    .tab-btn { 
+        background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.25); 
+        color: white; padding: 10px 20px; border-radius: 999px; font-weight: bold; 
+        white-space: nowrap; transition: all 0.2s; backdrop-filter: blur(10px); cursor: pointer;
+        text-decoration: none;
+    }
+    .tab-btn:hover { background: rgba(255, 255, 255, 0.25); }
+    .tab-btn.active { background: white; color: var(--text); box-shadow: var(--shadow); }
+
+    /* Styles spécifiques pour reproduire les images */
+    .formula-section {
+        border: 2px solid #000080; /* Bleu foncé */
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 24px;
+        background-color: white;
+    }
+    
+    .formula-header {
+        background-color: #000080;
+        color: white;
+        padding: 10px 16px;
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+
+    .formula-content {
+        padding: 20px;
+    }
+
+    .formula-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 16px;
+    }
+
+    .formula-table th {
+        text-align: left;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #000;
+        font-size: 1.1rem;
+    }
+
+    .formula-table td {
+        padding: 12px 0;
+        border-bottom: 1px solid #eee;
+        vertical-align: middle;
+    }
+    
+    .formula-table td:first-child {
+        width: 40%;
+    }
+
+    .sign-table {
+        width: 100%;
+        max-width: 600px;
+        margin: 20px auto;
+        border-collapse: collapse;
+        text-align: center;
+        border: 1px solid #000;
+    }
+
+    .sign-table th, .sign-table td {
+        border: 1px solid #000;
+        padding: 10px;
+    }
+    
+    .sign-table th {
+        background-color: #f8fafc;
+        font-weight: normal;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-container">
+    <div class="topbar">
+      <a class="btn ghost" style="background: rgba(255,255,255,0.2); color: white; border: none; backdrop-filter: blur(5px);" href="index.html">⟵ Retour à l'accueil</a>
+      <span class="badge">UAA4</span>
+    </div>
+
+    <section class="hero">
+      <h2>IPES DE HESBAYE - MATHEMATIQUES (4H) - 5TT</h2>
+      <h2>CHAPITRE 4: Fonctions de référence (Dérivées)</h2>
+      <p>LIBOY D.</p>
+    </section>
+    
+    <br>
+    
+    <nav class="tabs">
+      <a href="uaa4.html" class="tab-btn active">Formules</a>
+      <a href="uaa4_exercices.html" class="tab-btn">Exercices</a>
+      <a href="uaa4_videos.html" class="tab-btn">Vidéos</a>
+    </nav>
+
+    <section class="card">
+      <h2 class="text-3xl font-bold text-center mb-8">Formules de dérivation</h2>
+      
+      <div class="max-w-3xl mx-auto">
+          <h3 class="text-xl font-bold text-center mb-4">1. Dérivées des fonctions usuelles</h3>
+          <table class="formula-table mb-12">
+              <thead>
+                  <tr>
+                      <th>Fonction</th>
+                      <th>Dérivée</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td class="text-lg">$(k)' = 0$</td>
+                      <td class="text-slate-600">($k \in \mathbb{R}$ est une constante)</td>
+                  </tr>
+                  <tr>
+                      <td class="text-lg">$(kx)' = k$</td>
+                      <td class="text-slate-600">($k \in \mathbb{R}$)</td>
+                  </tr>
+                  <tr>
+                      <td class="text-lg">$(x^n)' = nx^{n-1}$</td>
+                      <td class="text-slate-600">($n \in \mathbb{Z}^*$)</td>
+                  </tr>
+                  <tr>
+                      <td class="text-lg">$(\sqrt{x})' = \frac{1}{2\sqrt{x}}$</td>
+                      <td class="text-slate-600">($x > 0$)</td>
+                  </tr>
+                  <tr>
+                      <td class="text-lg">$(\frac{1}{x})' = -\frac{1}{x^2}$</td>
+                      <td class="text-slate-600">($x \neq 0$)</td>
+                  </tr>
+                  <tr>
+                      <td class="text-lg">$(\sin x)' = \cos x$</td>
+                      <td class="text-slate-600">($x \in \mathbb{R}$)</td>
+                  </tr>
+                  <tr>
+                      <td class="text-lg">$(\cos x)' = -\sin x$</td>
+                      <td class="text-slate-600">($x \in \mathbb{R}$)</td>
+                  </tr>
+                  <tr>
+                      <td class="text-lg">$(e^x)' = e^x$</td>
+                      <td class="text-slate-600">($x \in \mathbb{R}$)</td>
+                  </tr>
+                  <tr>
+                      <td class="text-lg">$(\ln x)' = \frac{1}{x}$</td>
+                      <td class="text-slate-600">($x > 0$)</td>
+                  </tr>
+              </tbody>
+          </table>
+
+          <h3 class="text-xl font-bold text-center mb-4 mt-8">2. Opérations sur les dérivées</h3>
+          <table class="formula-table">
+              <thead>
+                  <tr>
+                      <th>Formule</th>
+                      <th>Opération</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td class="text-lg">$(u \pm v)' = u' \pm v'$</td>
+                      <td class="text-slate-700">Addition / Soustraction</td>
+                  </tr>
+                  <tr>
+                      <td class="text-lg">$(k \cdot u)' = k \cdot u'$</td>
+                      <td class="text-slate-700">Multiplication par un scalaire</td>
+                  </tr>
+                  <tr>
+                      <td class="text-lg">$(u \cdot v)' = u'v + uv'$</td>
+                      <td class="text-slate-700">Produit</td>
+                  </tr>
+                  <tr>
+                      <td class="text-lg">$(\frac{1}{u})' = -\frac{u'}{u^2}$</td>
+                      <td class="text-slate-700">Inverse</td>
+                  </tr>
+                  <tr>
+                      <td class="text-lg">$(\frac{u}{v})' = \frac{u'v - uv'}{v^2}$</td>
+                      <td class="text-slate-700">Quotient</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+    </section>
+
+    <section class="card bg-transparent shadow-none p-0">
+        
+        <!-- Section 3 : Dérivée première -->
+        <div class="formula-section">
+            <div class="formula-header">
+                3. Étude des variations (Dérivée première)
+            </div>
+            <div class="formula-content text-lg leading-relaxed">
+                <p class="mb-4"><span class="font-bold">Théorème fondamental :</span> Soit $f$ une fonction dérivable sur un intervalle $I$.</p>
+                <ul class="space-y-3 mb-6 ml-4">
+                    <li>- Si $f'(x) > 0$ sur $I$, alors $f$ est <span class="font-bold">strictement croissante</span> sur $I$.</li>
+                    <li>- Si $f'(x) < 0$ sur $I$, alors $f$ est <span class="font-bold">strictement décroissante</span> sur $I$.</li>
+                    <li>- Si $f'(x) = 0$ sur $I$, alors $f$ est <span class="font-bold">constante</span> sur $I$.</li>
+                </ul>
+                
+                <p class="mb-4"><span class="font-bold">Extremum local :</span> Si $f'(x)$ s'annule en $x=a$ <span class="font-bold">en changeant de signe</span>, alors la fonction $f$ admet un extremum local (maximum ou minimum) en $a$.</p>
+                
+                <p class="font-bold mb-2">Exemple de tableau de signes et de variations :</p>
+                
+                <table class="sign-table">
+                    <tr>
+                        <th>$x$</th>
+                        <td>$-\infty$</td>
+                        <td></td>
+                        <td>$x_1$</td>
+                        <td></td>
+                        <td>$x_2$</td>
+                        <td></td>
+                        <td>$+\infty$</td>
+                    </tr>
+                    <tr>
+                        <th>Signe de $f'(x)$</th>
+                        <td></td>
+                        <td>$+$</td>
+                        <td>0</td>
+                        <td>$-$</td>
+                        <td>0</td>
+                        <td>$+$</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>Variations de $f$</th>
+                        <td></td>
+                        <td>$\nearrow$</td>
+                        <td class="font-bold">Max local</td>
+                        <td>$\searrow$</td>
+                        <td class="font-bold">Min local</td>
+                        <td>$\nearrow$</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 4 : Dérivée seconde -->
+        <div class="formula-section">
+            <div class="formula-header">
+                4. Convexité et Inflexion (Dérivée seconde)
+            </div>
+            <div class="formula-content text-lg leading-relaxed">
+                <p class="mb-4">La dérivée seconde $f''(x)$ est la dérivée de la dérivée première $f'(x)$.</p>
+                <ul class="space-y-3 mb-6 ml-4">
+                    <li>- Si $f''(x) > 0$ sur $I$, alors $f$ est <span class="font-bold">convexe</span> ($\cup$) : la courbe est "tournée vers le haut".</li>
+                    <li>- Si $f''(x) < 0$ sur $I$, alors $f$ est <span class="font-bold">concave</span> ($\cap$) : la courbe est "tournée vers le bas".</li>
+                </ul>
+                
+                <p class="mb-4"><span class="font-bold">Point d'inflexion :</span> Un point d'inflexion est un point où la courbe traverse sa tangente (elle change de convexité). Il est atteint en $x=a$ lorsque $f''(x)$ s'annule <span class="font-bold">en changeant de signe</span>.</p>
+                
+                <p class="font-bold mb-2">Exemple de tableau de convexité :</p>
+                
+                <table class="sign-table">
+                    <tr>
+                        <th>$x$</th>
+                        <td>$-\infty$</td>
+                        <td></td>
+                        <td>$a$</td>
+                        <td></td>
+                        <td>$+\infty$</td>
+                    </tr>
+                    <tr>
+                        <th>Signe de $f''(x)$</th>
+                        <td></td>
+                        <td>$-$</td>
+                        <td>0</td>
+                        <td>$+$</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>Convexité de $f$</th>
+                        <td></td>
+                        <td>Concave ($\cap$)</td>
+                        <td class="font-bold">Point d'inflexion</td>
+                        <td>Convexe ($\cup$)</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </section>
+  </div>
+</body>
+</html>

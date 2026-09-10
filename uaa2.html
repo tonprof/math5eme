@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPES de Hesbaye - UAA2: Les Suites – LIBOY D.</title>
+  
+  <!-- Tailwind CSS pour les composants interactifs -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- MathJax pour l'affichage des formules mathématiques -->
+  <script>
+      window.MathJax = {
+          tex: {
+              inlineMath: [['$', '$'], ['\\(', '\\)']],
+              displayMath: [['$$', '$$'], ['\\[', '\\]']]
+          },
+          svg: { fontCache: 'global' }
+      };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    /* ----- THEME GLOBAL ----- */
+    :root{
+      --bg1:#0f172a; --bg2:#1d4ed8; --bg3:#7c3aed;
+      --card:#ffffffee; --text:#14213d; --muted:#475569;
+      --accent:#f97316; --accent2:#14b8a6; --ok:#16a34a; --bad:#dc2626;
+      --shadow:0 18px 40px rgba(15,23,42,.18);
+      --radius:22px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; font-family: Arial, Helvetica, sans-serif; color: var(--text);
+      background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+      min-height: 100vh;
+    }
+    .main-container { width: min(1180px, 92vw); margin: 0 auto; padding: 26px 0 40px; }
+    
+    .hero {
+      background: linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
+      border: 1px solid rgba(255,255,255,.16);
+      color: white; border-radius: 30px; padding: 28px; box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      margin-bottom: 24px;
+    }
+    .hero h1 { margin: 0 0 10px; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: bold; }
+    .hero h2 { margin: 0 0 8px; font-size: 1.5rem; font-weight: bold; }
+    .hero p { margin: .35rem 0; line-height: 1.6; }
+    
+    .card {
+      background: var(--card); border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+    
+    .badge { display: inline-block; padding: 6px 12px; border-radius: 999px; font-weight: bold; font-size: .85rem; color: white; background: linear-gradient(90deg, #14b8a6, #0d9488); }
+    .topbar { display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 18px; }
+    
+    .btn {
+      border: none; cursor: pointer; border-radius: 999px; padding: 12px 24px; font-weight: 700;
+      background: linear-gradient(90deg, var(--accent), #fb7185); color: white; box-shadow: var(--shadow); text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+    .btn.alt { background: linear-gradient(90deg, var(--accent2), #38bdf8); }
+    .btn.solution { background: linear-gradient(90deg, #8b5cf6, #d946ef); }
+    .btn.ghost { background: #eef2ff; color: #1e293b; box-shadow: none; border: 1px solid #cbd5e1; }
+    .btn.dark { background: linear-gradient(90deg, #334155, #0f172a); }
+    
+    .footer-note { color: white; opacity: .9; text-align: center; padding: 10px; }
+    
+    .tabs { display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 6px; }
+    .tab-btn { 
+        background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.25); 
+        color: white; padding: 10px 20px; border-radius: 999px; font-weight: bold; 
+        white-space: nowrap; transition: all 0.2s; backdrop-filter: blur(10px); cursor: pointer;
+    }
+    .tab-btn:hover { background: rgba(255, 255, 255, 0.25); }
+    .tab-btn.active { background: white; color: var(--text); box-shadow: var(--shadow); }
+
+    /* ----- LOGIQUE SPA ----- */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Composants Exercices */
+    .result{padding:16px; border-radius:14px; margin-top:20px; font-weight:normal; display:none;}
+    .result h3 { margin-top: 0; color: #1e293b; margin-bottom: 8px;}
+    .ok{background:#dcfce7; color:#166534; border: 1px solid #bbf7d0;}
+    .bad{background:#fee2e2; color:#991b1b; border: 1px solid #fecaca;}
+    .info{background:#e0f2fe; color:#075985; border: 1px solid #bae6fd;}
+    
+    input { padding: 10px 14px; border: 2px solid #cbd5e1; border-radius: 8px; font-size: 1.1rem; width: 100%; outline: none; transition: border-color 0.2s;}
+    input:focus { border-color: #6366f1; }
+    label { font-weight: bold; display: block; margin-bottom: 6px; color: #334155; font-size: 0.95rem;}
+  </style>
+</head>
+<body>
+  <div class="main-container">
+    
+    <div class="topbar">
+      <a class="btn ghost" style="background: rgba(255,255,255,0.2); color: white; border: none; backdrop-filter: blur(5px);" href="index.html">⟵ Retour à l'accueil</a>
+      <span class="badge" style="background: linear-gradient(90deg, #10b981, #059669);">UAA2</span>
+    </div>
+
+    <section class="hero">
+      <h2>IPES DE HESBAYE - MATHEMATIQUES (5H) - 4TT</h2>
+      <h2>CHAPITRE 2: Les Suites Numériques</h2>
+      <p>LIBOY D.</p>
+    </section>
+    
+    <nav class="tabs">
+      <button onclick="switchTab('theorie')" id="btn-theorie" class="tab-btn active">Théorie & Formules</button>
+      <button onclick="switchTab('exercices')" id="btn-exercices" class="tab-btn">Exercices d'application pure</button>
+      <button onclick="switchTab('finances')" id="btn-finances" class="tab-btn">Maths Financières</button>
+    </nav>
+
+    <section id="theorie" class="tab-content active">
+      <div class="card">
+        <h2 class="text-2xl font-bold text-indigo-900 mb-6 border-b pb-2">Suites Arithmétiques vs Géométriques</h2>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- Suite Arithmétique -->
+            <div class="bg-blue-50 p-6 rounded-xl border-t-4 border-blue-500 shadow-sm">
+                <h3 class="font-bold text-xl mb-4 text-blue-800">Suite Arithmétique</h3>
+                <p class="text-slate-700 mb-4">On passe d'un terme au suivant en <strong>ajoutant</strong> toujours le même nombre appelé la <em>raison</em> ($r$).</p>
+                
+                <div class="space-y-4">
+                    <div class="bg-white p-3 rounded border border-blue-100">
+                        <span class="text-sm font-bold text-slate-500 block">Terme général ($u_n$) :</span>
+                        <div class="text-center font-mono text-lg mt-1">$u_n = u_1 + (n-1)r$</div>
+                    </div>
+                    <div class="bg-white p-3 rounded border border-blue-100">
+                        <span class="text-sm font-bold text-slate-500 block">Somme des $n$ premiers termes ($S_n$) :</span>
+                        <div class="text-center font-mono text-lg mt-1">$S_n = n \times \frac{u_1 + u_n}{2}$</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Suite Géométrique -->
+            <div class="bg-emerald-50 p-6 rounded-xl border-t-4 border-emerald-500 shadow-sm">
+                <h3 class="font-bold text-xl mb-4 text-emerald-800">Suite Géométrique</h3>
+                <p class="text-slate-700 mb-4">On passe d'un terme au suivant en <strong>multipliant</strong> toujours par le même nombre appelé la <em>raison</em> ($q$).</p>
+                
+                <div class="space-y-4">
+                    <div class="bg-white p-3 rounded border border-emerald-100">
+                        <span class="text-sm font-bold text-slate-500 block">Terme général ($u_n$) :</span>
+                        <div class="text-center font-mono text-lg mt-1">$u_n = u_1 \times q^{n-1}$</div>
+                    </div>
+                    <div class="bg-white p-3 rounded border border-emerald-100">
+                        <span class="text-sm font-bold text-slate-500 block">Somme des $n$ premiers termes ($S_n$) :</span>
+                        <div class="text-center font-mono text-lg mt-1">$S_n = u_1 \times \frac{1 - q^n}{1 - q}$</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="exercices" class="tab-content">
+      <div class="card">
+        <h2 class="text-2xl font-bold text-indigo-900 mb-6 border-b pb-2">Exercices d'application pure</h2>
+        <p class="mb-6 text-slate-700 text-lg">Entraînez-vous à manipuler les formules. Il n'y a aucun problème textuel ici, uniquement des calculs mathématiques directs.</p>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="font-bold text-2xl text-indigo-800" id="ex-title">Titre de l'exercice</h3>
+                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-bold" id="ex-type-badge">Type</span>
+            </div>
+            
+            <div id="ex-statement" class="text-xl text-slate-700 mb-8 font-medium bg-white p-6 rounded-xl border border-slate-200 shadow-inner">
+                <!-- L'énoncé mathématique sera injecté ici -->
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8" id="ex-inputs">
+                <!-- Les inputs seront injectés ici -->
+            </div>
+            
+            <div class="flex gap-4 flex-wrap mt-4 border-t pt-6 border-slate-200">
+                <button onclick="generateExercise()" class="btn ghost text-indigo-900 border-indigo-300 hover:bg-indigo-50">Générer un autre calcul</button>
+                <button onclick="checkExercise()" class="btn solution">Vérifier mon résultat</button>
+                <button onclick="showDetailedSolution()" class="btn dark">Afficher la démarche complète</button>
+            </div>
+
+            <div id="ex-feedback" class="result mt-6"></div>
+            <div id="ex-solution" class="result info mt-6 space-y-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="finances" class="tab-content">
+      <div class="card">
+        <h2 class="text-2xl font-bold text-indigo-900 mb-6 border-b pb-2">Mathématiques Financières</h2>
+        <p class="mb-6 text-slate-700 text-lg">Appliquez les suites numériques aux placements financiers réels (intérêts simples et composés).</p>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 md:p-8 shadow-sm">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="font-bold text-2xl text-indigo-800" id="fin-title">Titre du problème</h3>
+                <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-bold" id="fin-type-badge">Type</span>
+            </div>
+            
+            <div id="fin-statement" class="text-xl text-slate-700 mb-8 font-medium bg-white p-6 rounded-xl border border-slate-200 shadow-inner leading-relaxed">
+                <!-- L'énoncé financier sera injecté ici -->
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div>
+                    <label>Capital final ($C_n$) en € :</label>
+                    <input type="number" step="0.01" id="in-fin-ans" placeholder="Ex: 1250.50 (à 2 décimales)">
+                </div>
+            </div>
+            
+            <div class="flex gap-4 flex-wrap mt-4 border-t pt-6 border-slate-200">
+                <button onclick="generateFinance()" class="btn ghost text-indigo-900 border-indigo-300 hover:bg-indigo-50">Nouveau problème</button>
+                <button onclick="checkFinance()" class="btn solution">Vérifier mon calcul</button>
+                <button onclick="showFinanceHint()" class="btn alt">Un indice ? 💡</button>
+                <button onclick="showFinanceSolution()" class="btn dark">Solution détaillée</button>
+            </div>
+
+            <div id="fin-feedback" class="result mt-6"></div>
+            <div id="fin-hint-box" class="result info mt-4 space-y-2"></div>
+            <div id="fin-solution" class="result warning mt-6 space-y-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer-note">&copy; 2026 LIBOY D. / IPES de Hesbaye / Plateforme éducative interactive</p>
+  </div>
+
+  <script>
+    // --- GESTION DES ONGLETS ---
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        document.getElementById(`btn-${tabId}`).classList.add('active');
+        if (window.MathJax) MathJax.typesetPromise();
+    }
+
+    // --- LOGIQUE DES EXERCICES PURS ---
+    let currentEx = {};
+
+    function generateExercise() {
+        // Cacher les blocs
+        document.getElementById('ex-feedback').style.display = 'none';
+        document.getElementById('ex-solution').style.display = 'none';
+        
+        // Types: 0 (Terme Arith), 1 (Somme Arith), 2 (Terme Géo), 3 (Somme Géo)
+        const exType = Math.floor(Math.random() * 4);
+        
+        let title = "";
+        let badge = "";
+        let statement = "";
+        let inputsHTML = "";
+        let solution = "";
+        let expected = {};
+
+        if (exType === 0) {
+            title = "Recherche d'un terme spécifique";
+            badge = "Arithmétique";
+            let u1 = Math.floor(Math.random() * 20) - 10; 
+            let r = Math.floor(Math.random() * 15) - 5; if(r===0) r=3;
+            let n = Math.floor(Math.random() * 40) + 10; 
+            
+            let un = u1 + (n - 1) * r;
+            
+            statement = `Soit la suite arithmétique $(u_n)$ définie par :<br><br>
+                         $u_1 = ${u1}$<br>
+                         $r = ${r}$<br><br>
+                         Calculez la valeur exacte de $u_{${n}}$.`;
+            
+            inputsHTML = `
+                <div>
+                    <label>Valeur de $u_{${n}}$ :</label>
+                    <input type="number" id="in-ans1" placeholder="Votre réponse numérique">
+                </div>
+            `;
+            expected = { ans1: un };
+            
+            solution = `
+                <h4 class="font-bold text-sky-800 border-b pb-1 mb-2">1. Formule du terme général</h4>
+                <p>On utilise la formule : $u_n = u_1 + (n-1)r$</p>
+                <h4 class="font-bold text-sky-800 border-b pb-1 mb-2 mt-4">2. Remplacement et calcul</h4>
+                <p>$u_{${n}} = ${u1} + (${n} - 1) \\times (${r})$</p>
+                <p>$u_{${n}} = ${u1} + ${n-1} \\times (${r})$</p>
+                <p>$u_{${n}} = ${u1} + (${(n-1)*r})$</p>
+                <p class="font-bold text-lg mt-2 text-indigo-900">Résultat final : $u_{${n}} = ${un}$</p>
+            `;
+
+        } else if (exType === 1) {
+            title = "Calcul d'une somme de termes";
+            badge = "Arithmétique";
+            let u1 = Math.floor(Math.random() * 10) + 1;
+            let r = Math.floor(Math.random() * 6) + 2;
+            let n = Math.floor(Math.random() * 20) + 10; 
+            
+            let un = u1 + (n - 1) * r;
+            let sn = n * (u1 + un) / 2;
+
+            statement = `Soit la suite arithmétique $(u_n)$ définie par :<br><br>
+                         $u_1 = ${u1}$<br>
+                         $r = ${r}$<br><br>
+                         Calculez la somme des ${n} premiers termes, notée $S_{${n}}$.`;
+            
+            inputsHTML = `
+                <div>
+                    <label>Valeur de $S_{${n}}$ :</label>
+                    <input type="number" id="in-ans1" placeholder="Valeur totale de la somme">
+                </div>
+            `;
+            expected = { ans1: sn };
+
+            solution = `
+                <h4 class="font-bold text-sky-800 border-b pb-1 mb-2">1. Recherche du dernier terme ($u_{${n}}$)</h4>
+                <p>Pour calculer la somme, on a d'abord besoin du terme $u_{${n}}$.</p>
+                <p>$u_{${n}} = u_1 + (n-1)r = ${u1} + (${n}-1) \\times ${r} = ${u1} + ${n-1} \\times ${r} = ${un}$</p>
+                <h4 class="font-bold text-sky-800 border-b pb-1 mb-2 mt-4">2. Application de la formule de la somme</h4>
+                <p>$S_n = n \\times \\frac{u_1 + u_n}{2}$</p>
+                <p>$S_{${n}} = ${n} \\times \\frac{${u1} + ${un}}{2}$</p>
+                <p>$S_{${n}} = ${n} \\times \\frac{${u1+un}}{2} = ${n} \\times ${(u1+un)/2}$</p>
+                <p class="font-bold text-lg mt-2 text-indigo-900">Résultat final : $S_{${n}} = ${sn}$</p>
+            `;
+
+        } else if (exType === 2) {
+            title = "Recherche d'un terme spécifique";
+            badge = "Géométrique";
+            let u1 = Math.floor(Math.random() * 5) + 2; 
+            let q = Math.floor(Math.random() * 3) + 2; if(Math.random()>0.5) q = -q;
+            let n = Math.floor(Math.random() * 5) + 4; 
+            
+            let un = u1 * Math.pow(q, n - 1);
+
+            statement = `Soit la suite géométrique $(u_n)$ définie par :<br><br>
+                         $u_1 = ${u1}$<br>
+                         $q = ${q}$<br><br>
+                         Calculez la valeur exacte de $u_{${n}}$.`;
+            
+            inputsHTML = `
+                <div>
+                    <label>Valeur de $u_{${n}}$ :</label>
+                    <input type="number" id="in-ans1" placeholder="Votre réponse numérique">
+                </div>
+            `;
+            expected = { ans1: un };
+
+            solution = `
+                <h4 class="font-bold text-sky-800 border-b pb-1 mb-2">1. Formule du terme général</h4>
+                <p>On utilise la formule : $u_n = u_1 \\times q^{n-1}$</p>
+                <h4 class="font-bold text-sky-800 border-b pb-1 mb-2 mt-4">2. Remplacement et calcul</h4>
+                <p>$u_{${n}} = ${u1} \\times (${q})^{${n}-1}$</p>
+                <p>$u_{${n}} = ${u1} \\times (${q})^{${n-1}}$</p>
+                <p>$u_{${n}} = ${u1} \\times (${Math.pow(q, n-1)})$</p>
+                <p class="font-bold text-lg mt-2 text-indigo-900">Résultat final : $u_{${n}} = ${un}$</p>
+            `;
+        } else {
+            title = "Calcul d'une somme de termes";
+            badge = "Géométrique";
+            let u1 = Math.floor(Math.random() * 3) + 1; 
+            let q = Math.floor(Math.random() * 3) + 2;
+            let n = Math.floor(Math.random() * 4) + 4; 
+            
+            let sn = u1 * (1 - Math.pow(q, n)) / (1 - q);
+
+            statement = `Soit la suite géométrique $(u_n)$ définie par :<br><br>
+                         $u_1 = ${u1}$<br>
+                         $q = ${q}$<br><br>
+                         Calculez la somme des ${n} premiers termes, notée $S_{${n}}$.`;
+            
+            inputsHTML = `
+                <div>
+                    <label>Valeur de $S_{${n}}$ :</label>
+                    <input type="number" id="in-ans1" placeholder="Valeur totale de la somme">
+                </div>
+            `;
+            expected = { ans1: sn };
+
+            let qPow = Math.pow(q, n);
+            let num = 1 - qPow;
+            let den = 1 - q;
+
+            solution = `
+                <h4 class="font-bold text-sky-800 border-b pb-1 mb-2">1. Formule de la somme</h4>
+                <p>Pour une suite géométrique ($q \\neq 1$) : $S_n = u_1 \\times \\frac{1 - q^n}{1 - q}$</p>
+                <h4 class="font-bold text-sky-800 border-b pb-1 mb-2 mt-4">2. Remplacement et calcul</h4>
+                <p>$S_{${n}} = ${u1} \\times \\frac{1 - (${q})^{${n}}}{1 - (${q})}$</p>
+                <p>$S_{${n}} = ${u1} \\times \\frac{1 - ${qPow}}{${den}}$</p>
+                <p>$S_{${n}} = ${u1} \\times \\frac{${num}}{${den}}$</p>
+                <p>$S_{${n}} = ${u1} \\times (${num/den})$</p>
+                <p class="font-bold text-lg mt-2 text-indigo-900">Résultat final : $S_{${n}} = ${sn}$</p>
+            `;
+        }
+
+        currentEx = {
+            ans1: expected.ans1,
+            solution: solution
+        };
+
+        // UI Update
+        document.getElementById('ex-title').innerText = title;
+        document.getElementById('ex-type-badge').innerText = badge;
+        document.getElementById('ex-statement').innerHTML = statement;
+        document.getElementById('ex-inputs').innerHTML = inputsHTML;
+        
+        if (window.MathJax) MathJax.typesetPromise();
+    }
+
+    // --- VERIFICATION ET SOLUTION ---
+    function checkExercise() {
+        const inputEl = document.getElementById('in-ans1');
+        const userVal = parseFloat(inputEl.value);
+        const fb = document.getElementById('ex-feedback');
+        
+        fb.style.display = 'block';
+        inputEl.classList.remove('border-red-500', 'border-green-500');
+
+        if (isNaN(userVal)) {
+            fb.className = 'result bad';
+            fb.innerHTML = '<h3>⚠️ Attention</h3><p>Veuillez entrer une valeur numérique.</p>';
+            inputEl.classList.add('border-red-500');
+            return;
+        }
+
+        if (Math.abs(userVal - currentEx.ans1) < 0.001) {
+            fb.className = 'result ok';
+            fb.innerHTML = '<h3>✅ Parfait !</h3><p>Votre calcul est rigoureusement exact.</p>';
+            inputEl.classList.add('border-green-500');
+        } else {
+            fb.className = 'result bad';
+            fb.innerHTML = '<h3>❌ Erreur de calcul</h3><p>Ce n\'est pas la bonne réponse. Vérifiez vos priorités d\'opérations ou affichez la démarche complète.</p>';
+            inputEl.classList.add('border-red-500');
+        }
+    }
+
+    function showDetailedSolution() {
+        const box = document.getElementById('ex-solution');
+        box.style.display = 'block';
+        box.innerHTML = `
+            <div class="flex items-center gap-2 mb-4">
+                <span class="text-2xl">💡</span>
+                <h3 class="text-xl font-bold text-sky-900 m-0">Démarche complète</h3>
+            </div>
+            <div class="text-slate-800 text-lg ml-2">
+                ${currentEx.solution}
+            </div>
+        `;
+        document.getElementById('ex-feedback').style.display = 'none';
+        if (window.MathJax) MathJax.typesetPromise([box]);
+    }
+
+    //    let currentFinEx = {};
+    let finHintLevel = 0;
+
+    function generateFinance() {
+        // Cacher les blocs de feedback
+        document.getElementById('fin-feedback').style.display = 'none';
+        document.getElementById('fin-hint-box').style.display = 'none';
+        document.getElementById('fin-solution').style.display = 'none';
+        finHintLevel = 0;
+
+        // 0 = Intérêts Simples (Suite Arithmétique), 1 = Intérêts Composés (Suite Géométrique)
+        const isSimple = Math.random() < 0.5; 
+        
+        // Génération de valeurs réalistes
+        let c0 = (Math.floor(Math.random() * 45) + 5) * 100; // Entre 500€ et 5000€ (multiples de 100)
+        let ratePercent = Math.floor(Math.random() * 7) + 2; // Taux entre 2% et 8%
+        let rateDecimal = ratePercent / 100;
+        let years = Math.floor(Math.random() * 9) + 2; // Durée entre 2 et 10 ans
+
+        let title, badge, statement, solution, expected, hints;
+
+        if (isSimple) {
+            title = "Placement à intérêts simples";
+            badge = "Intérêts Simples (Arithmétique)";
+            expected = c0 * (1 + rateDecimal * years);
+            
+            statement = `Vous placez un capital initial de <strong>${c0} €</strong> sur un compte rapportant des <strong>intérêts simples</strong> au taux annuel de <strong>${ratePercent}%</strong>.<br><br>
+                         Quel sera le capital total disponible sur ce compte après <strong>${years} ans</strong> ?<br>
+                         <span class="text-sm text-slate-500 italic">Attention : Les intérêts simples ne sont calculés que sur le capital de départ.</span>`;
+            
+            hints = [
+                "Dans un placement à intérêts simples, le gain annuel est fixe. C'est le principe d'une suite arithmétique.",
+                `Calculez d'abord l'intérêt gagné en UNE seule année : ${c0} € $\\times$ ${rateDecimal}.`,
+                `Multipliez cet intérêt annuel par le nombre d'années (${years}), puis ajoutez le résultat au capital de départ (${c0} €).`
+            ];
+
+            solution = `
+                <h4 class="font-bold text-sky-800 border-b pb-1 mb-2">1. Rappel de la formule</h4>
+                <p>Pour les intérêts simples : $C_n = C_0 \\times (1 + i \\times n)$ ou $C_n = C_0 + (C_0 \\times i \\times n)$</p>
+                <h4 class="font-bold text-sky-800 border-b pb-1 mb-2 mt-4">2. Calcul détaillé</h4>
+                <p>Intérêt gagné en 1 an : $${c0} \\times ${rateDecimal} = ${c0 * rateDecimal}$ €</p>
+                <p>Intérêt total sur ${years} ans : $${c0 * rateDecimal} \\times ${years} = ${c0 * rateDecimal * years}$ €</p>
+                <p>Capital final ($C_{${years}}$) : $${c0} + ${c0 * rateDecimal * years} = ${expected}$ €</p>
+                <p class="font-bold text-lg mt-2 text-indigo-900">Résultat final : ${expected.toFixed(2)} €</p>
+            `;
+        } else {
+            title = "Placement à intérêts composés";
+            badge = "Intérêts Composés (Géométrique)";
+            expected = c0 * Math.pow(1 + rateDecimal, years);
+            
+            statement = `Vous placez un capital initial de <strong>${c0} €</strong> sur un compte rapportant des <strong>intérêts composés</strong> au taux annuel de <strong>${ratePercent}%</strong>.<br><br>
+                         Quel sera le capital total disponible sur ce compte après <strong>${years} ans</strong> ?<br>
+                         <span class="text-sm text-slate-500 italic">Arrondissez votre réponse finale à 2 décimales (au centime près).</span>`;
+            
+            hints = [
+                "Dans un placement à intérêts composés, les intérêts s'ajoutent au capital chaque année pour produire de nouveaux intérêts. C'est une suite géométrique.",
+                `Le coefficient multiplicateur annuel est $(1 + i) = (1 + ${rateDecimal}) = 1.${ratePercent.toString().padStart(2, '0')}$.`,
+                `Appliquez la formule $C_n = C_0 \\times (1 + i)^n$ en remplaçant par vos valeurs : $C_{${years}} = ${c0} \\times (1.${ratePercent.toString().padStart(2, '0')})^{${years}}$.`
+            ];
+
+            let coeff = 1 + rateDecimal;
+            solution = `
+                <h4 class="font-bold text-sky-800 border-b pb-1 mb-2">1. Rappel de la formule</h4>
+                <p>Pour les intérêts composés, on utilise la formule des suites géométriques : $C_n = C_0 \\times (1 + i)^n$</p>
+                <h4 class="font-bold text-sky-800 border-b pb-1 mb-2 mt-4">2. Calcul détaillé</h4>
+                <p>Le taux est de ${ratePercent}%, donc $i = ${rateDecimal}$. Le coefficient multiplicateur est $1 + ${rateDecimal} = ${coeff}$.</p>
+                <p>$C_{${years}} = ${c0} \\times (${coeff})^{${years}}$</p>
+                <p>$C_{${years}} = ${c0} \\times ${Math.pow(coeff, years).toFixed(5)}...$</p>
+                <p class="font-bold text-lg mt-2 text-indigo-900">Résultat final : ${expected.toFixed(2)} €</p>
+            `;
+        }
+
+        currentFinEx = {
+            ans: expected,
+            hints: hints,
+            solution: solution
+        };
+
+        // Mise à jour de l'interface UI
+        document.getElementById('fin-title').innerText = title;
+        document.getElementById('fin-type-badge').innerText = badge;
+        document.getElementById('fin-type-badge').className = isSimple 
+            ? "bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-bold"
+            : "bg-fuchsia-100 text-fuchsia-800 px-3 py-1 rounded-full text-sm font-bold";
+        document.getElementById('fin-statement').innerHTML = statement;
+        
+        const inputEl = document.getElementById('in-fin-ans');
+        inputEl.value = '';
+        inputEl.classList.remove('border-red-500', 'border-green-500');
+        
+        if (window.MathJax) MathJax.typesetPromise();
+    }
+
+    function checkFinance() {
+        const inputEl = document.getElementById('in-fin-ans');
+        const userVal = parseFloat(inputEl.value.replace(',', '.')); // Gère la virgule ou le point
+        const fb = document.getElementById('fin-feedback');
+        
+        fb.style.display = 'block';
+        inputEl.classList.remove('border-red-500', 'border-green-500');
+
+        if (isNaN(userVal)) {
+            fb.className = 'result bad';
+            fb.innerHTML = '<h3>⚠️ Attention</h3><p>Veuillez entrer une valeur numérique valide.</p>';
+            inputEl.classList.add('border-red-500');
+            return;
+        }
+
+        // On tolère une petite différence de quelques centimes liée aux arrondis intermédiaires des élèves
+        if (Math.abs(userVal - currentFinEx.ans) <= 0.05) {
+            fb.className = 'result ok';
+            fb.innerHTML = '<h3>✅ Parfait !</h3><p>Votre calcul de capital final est exact.</p>';
+            inputEl.classList.add('border-green-500');
+        } else {
+            fb.className = 'result bad';
+            fb.innerHTML = '<h3>❌ Erreur de calcul</h3><p>Ce n\'est pas la bonne réponse. Avez-vous confondu intérêts simples et composés ? Demandez un indice.</p>';
+            inputEl.classList.add('border-red-500');
+        }
+    }
+
+    function showFinanceHint() {
+        if (!currentFinEx.hints || currentFinEx.hints.length === 0) return;
+        
+        const box = document.getElementById('fin-hint-box');
+        box.style.display = 'block';
+        
+        if (finHintLevel < currentFinEx.hints.length) {
+            box.innerHTML += `<p>💡 ${currentFinEx.hints[finHintLevel]}</p>`;
+            finHintLevel++;
+            if (window.MathJax) MathJax.typesetPromise([box]);
+        } else if (!box.innerHTML.includes("Tous les indices")) {
+            box.innerHTML += `<p class="italic text-sm text-sky-800 mt-2 pt-2 border-t border-sky-200">Tous les indices ont été donnés. Regardez la solution détaillée si besoin.</p>`;
+        }
+    }
+
+    function showFinanceSolution() {
+        const box = document.getElementById('fin-solution');
+        box.style.display = 'block';
+        box.innerHTML = `
+            <div class="flex items-center gap-2 mb-4">
+                <span class="text-2xl">💡</span>
+                <h3 class="text-xl font-bold text-sky-900 m-0">Démarche complète</h3>
+            </div>
+            <div class="text-slate-800 text-lg ml-2">
+                ${currentFinEx.solution}
+            </div>
+        `;
+        document.getElementById('fin-feedback').style.display = 'none';
+        if (window.MathJax) MathJax.typesetPromise([box]);
+    }
+
+    // Génération automatique au chargement
+    window.onload = function() {
+        generateExercise(); // Existant (Exercices purs)
+        generateFinance();  // Nouveau (Finances)
+    };
+  </script>
+</body>
+</html>
