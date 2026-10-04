@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPES de Hesbaye - UAA2: Suites - Tuteur Pédagogique</title>
+  
+  <script>
+      window.MathJax = {
+          tex: {
+              inlineMath: [['$', '$'], ['\\(', '\\)']],
+              displayMath: [['$$', '$$'], ['\\[', '\\]']]
+          }
+      };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root{
+      --bg1:#0f172a; --bg2:#1d4ed8; --bg3:#7c3aed;
+      --card:#ffffffee; --text:#14213d; --muted:#475569;
+      --accent:#14b8a6; --accent2:#0d9488;
+      --shadow:0 18px 40px rgba(15,23,42,.18);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0; font-family:Arial,Helvetica,sans-serif; color:var(--text);
+      background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+      min-height:100vh;
+    }
+    .container{width:min(1180px,92vw); margin:0 auto; padding:26px 0 40px}
+    .hero{
+      background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.08));
+      border:1px solid rgba(255,255,255,.16);
+      color:white; border-radius:30px; padding:28px; box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+    }
+    .hero h1{margin:0 0 10px; font-size:clamp(1.8rem,4vw,3rem)}
+    .hero p{margin:.35rem 0; line-height:1.6}
+    
+    .card{
+      background:var(--card); border-radius:var(--radius); padding:26px; box-shadow:var(--shadow);
+      margin-bottom: 24px;
+    }
+    .card h2 { color: #1e3a8a; margin-top:0; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 20px;}
+    .card h3 { color: #4338ca; margin-top: 20px; }
+    
+    .badge{display:inline-block; padding:6px 12px; border-radius:999px; font-weight:bold; font-size:.85rem; color:white; background:linear-gradient(90deg,var(--accent),var(--accent2))}
+    .topbar{display:flex; gap:14px; align-items:center; justify-content:space-between; flex-wrap:wrap; margin-bottom:18px}
+    
+    .back-btn{
+      border:none; cursor:pointer; border-radius:999px; padding:12px 18px; font-weight:700;
+      background: #ffffff; color:#1e293b; box-shadow:var(--shadow); text-decoration:none;
+      transition: transform 0.2s;
+    }
+    .back-btn:hover { transform: translateY(-2px); }
+    
+    details {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
+    }
+    details[open] {
+      background: #ffffff;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      border-color: #93c5fd;
+    }
+    summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: #1e40af;
+      font-size: 1.1rem;
+      outline: none;
+      list-style: none;
+      display: flex;
+      align-items: center;
+    }
+    summary::before {
+      content: '▶';
+      display: inline-block;
+      margin-right: 10px;
+      font-size: 0.9rem;
+      transition: transform 0.2s;
+    }
+    details[open] summary::before {
+      transform: rotate(90deg);
+    }
+    
+    .step-box {
+      margin-top: 16px;
+      padding-left: 16px;
+      border-left: 4px solid #3b82f6;
+    }
+    .step {
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    .step strong {
+      color: #2563eb;
+    }
+    .formula-box {
+      background: #eff6ff;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+      color: #1d4ed8;
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+    }
+    .note { font-size: 0.9rem; color: #475569; font-weight: normal; display: block; margin-top: 5px; }
+    
+    .footer-note{color:white; opacity:.9; text-align:center; padding:10px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <a class="back-btn" href="index.html">⟵ Retour à l'accueil</a>
+      <span class="badge">UAA2</span>
+    </div>
+
+    <section class="hero">
+      <h2>IPES DE HESBAYE - MATHEMATIQUES (5H) - 4TT</h2>
+      <h2>CHAPITRE 2: Les Suites</h2>
+      <p>LIBOY D.</p>
+    </section>
+    
+    <br>
+
+    <section class="card">
+      <h2>1. Trouver un terme d'une suite arithmétique (Formule Universelle)</h2>
+      <p>Dans une suite arithmétique, on avance en ajoutant toujours la même <strong>raison</strong> ($r$). Pour aller d'un point de départ $u_p$ à un point d'arrivée $u_n$, il faut compter l'écart entre les indices ($n - p$) pour savoir combien de "sauts" de raison $r$ on doit faire.</p>
+      
+      <div class="formula-box">
+        Formule : $u_n = u_p + (n - p)r$
+        <span class="note">(condition : $n > p$)</span>
+      </div>
+
+      <details>
+        <summary>Exemple 1 : Partir de $u_1$</summary>
+        <div class="step-box">
+          <p class="step"><em>Énoncé : Soit une suite arithmétique de premier terme $u_1 = 5$ et de raison $r = 3$. Quel est le 10ème terme ($u_{10}$) ?</em></p>
+          <p class="step"><strong>Étape 1 : Identifier $n$ et $p$.</strong> Le terme cherché est $u_{10}$ (donc $n = 10$). Le terme de départ connu est $u_1$ (donc $p = 1$).</p>
+          <p class="step"><strong>Étape 2 : Appliquer la formule universelle.</strong> L'écart est $(10 - 1) = 9$ sauts.</p>
+          <p class="step"><strong>Étape 3 : Calcul.</strong> $u_{10} = u_1 + (10 - 1) \times 3 \rightarrow u_{10} = 5 + 9 \times 3$</p>
+          <p class="step"><strong>Étape 4 : Résultat.</strong> $u_{10} = 5 + 27 = 32$.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Exemple 2 : Partir de $u_0$ avec des nombres négatifs</summary>
+        <div class="step-box">
+          <p class="step"><em>Énoncé : Soit une suite arithmétique où $u_0 = -4$ et $r = 7$. Calculez $u_{20}$.</em></p>
+          <p class="step"><strong>Étape 1 : Identifier $n$ et $p$.</strong> Arrivée : $n = 20$. Départ : $p = 0$.</p>
+          <p class="step"><strong>Étape 2 : L'écart.</strong> L'avantage de la formule universelle est qu'elle s'adapte ! Le nombre de sauts est $(20 - 0) = 20$.</p>
+          <p class="step"><strong>Étape 3 : Calcul.</strong> $u_{20} = u_0 + (20 - 0) \times 7 \rightarrow u_{20} = -4 + 20 \times 7$</p>
+          <p class="step"><strong>Étape 4 : Résultat.</strong> $u_{20} = -4 + 140 = 136$.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Exemple 3 : Partir d'un rang quelconque</summary>
+        <div class="step-box">
+          <p class="step"><em>Énoncé : Vous connaissez le terme $u_5 = 20$ et la raison $r = -2$. Trouvez $u_{15}$.</em></p>
+          <p class="step"><strong>Étape 1 : Identifier $n$ et $p$.</strong> Arrivée : $n = 15$. Départ : $p = 5$.</p>
+          <p class="step"><strong>Étape 2 : L'écart.</strong> Le nombre de sauts pour aller de $u_5$ à $u_{15}$ est de $(15 - 5) = 10$.</p>
+          <p class="step"><strong>Étape 3 : Calcul.</strong> $u_{15} = u_5 + (15 - 5) \times (-2) \rightarrow u_{15} = 20 + 10 \times (-2)$</p>
+          <p class="step"><strong>Étape 4 : Résultat.</strong> $u_{15} = 20 - 20 = 0$.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>2. Trouver la somme d'une suite arithmétique</h2>
+      <p>Pour additionner un bloc de termes, on multiplie le <strong>nombre total de termes</strong> par la moyenne entre le premier terme de la somme ($u_p$) et le dernier ($u_n$). <br><br><em>Astuce : Le nombre de termes pour aller de $u_p$ à $u_n$ inclus se calcule toujours par $(n - p + 1)$.</em></p>
+      
+      <div class="formula-box">
+        Formule : $S = \text{Nombre de termes} \times \frac{u_p + u_n}{2}$
+        <span class="note">Soit : $S = (n - p + 1) \times \frac{u_p + u_n}{2}$</span>
+      </div>
+
+      <details>
+        <summary>Exemple 1 : Somme en partant de $u_1$</summary>
+        <div class="step-box">
+          <p class="step"><em>Énoncé : Calculez la somme des termes de $u_1$ à $u_{20}$ inclus, sachant que $u_1 = -4$ et $u_{20} = 129$.</em></p>
+          <p class="step"><strong>Étape 1 : Nombre de termes.</strong> De $p=1$ à $n=20$, le nombre de termes est $(20 - 1 + 1) = 20$.</p>
+          <p class="step"><strong>Étape 2 : La moyenne.</strong> $\frac{u_1 + u_{20}}{2} = \frac{-4 + 129}{2} = \frac{125}{2} = 62.5$.</p>
+          <p class="step"><strong>Étape 3 : Calcul.</strong> $S = 20 \times 62.5$.</p>
+          <p class="step"><strong>Étape 4 : Résultat.</strong> $S = 1250$.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Exemple 2 : Calcul préalable du dernier terme</summary>
+        <div class="step-box">
+          <p class="step"><em>Énoncé : Calculez la somme des termes de $u_0$ à $u_9$ inclus, avec $u_0 = 2$ et $r = 4$.</em></p>
+          <p class="step"><strong>Étape 1 : Calculer le dernier terme ($u_n$).</strong> Il nous faut $u_9$. Grâce à la formule universelle : $u_9 = u_0 + (9 - 0) \times 4 = 2 + 36 = 38$.</p>
+          <p class="step"><strong>Étape 2 : Nombre de termes.</strong> De $p=0$ à $n=9$, on a $(9 - 0 + 1) = 10$ termes.</p>
+          <p class="step"><strong>Étape 3 : Appliquer la formule de la somme.</strong> $S = 10 \times \frac{u_0 + u_9}{2} \rightarrow S = 10 \times \frac{2 + 38}{2}$.</p>
+          <p class="step"><strong>Étape 4 : Résultat.</strong> $S = 10 \times \frac{40}{2} = 10 \times 20 = 200$.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Exemple 3 : Somme sur une portion centrale de la suite</summary>
+        <div class="step-box">
+          <p class="step"><em>Énoncé : Calculez la somme des termes allant de $u_5$ à $u_{12}$ inclus. On donne $u_5 = 10$ et $u_{12} = 45$.</em></p>
+          <p class="step"><strong>Étape 1 : Nombre de termes.</strong> Attention ici, on va de $p=5$ à $n=12$. Le nombre de termes est $(12 - 5 + 1) = 8$.</p>
+          <p class="step"><strong>Étape 2 : Remplacer dans la formule.</strong> On prend les termes concernés : $S = 8 \times \frac{u_5 + u_{12}}{2}$.</p>
+          <p class="step"><strong>Étape 3 : Calcul.</strong> $S = 8 \times \frac{10 + 45}{2} = 8 \times \frac{55}{2}$.</p>
+          <p class="step"><strong>Étape 4 : Résultat.</strong> $S = 4 \times 55 = 220$.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>3. Trouver un terme d'une suite géométrique (Formule Universelle)</h2>
+      <p>Pour une suite géométrique, on avance par <strong>multiplication</strong> de la raison ($q$). L'écart entre l'indice d'arrivée ($n$) et l'indice de départ ($p$) devient la puissance (l'exposant) de $q$.</p>
+      
+      <div class="formula-box">
+        Formule : $u_n = u_p \times q^{n-p}$
+        <span class="note">(condition : $n > p$)</span>
+      </div>
+
+      <details>
+        <summary>Exemple 1 : Partir de $u_1$</summary>
+        <div class="step-box">
+          <p class="step"><em>Énoncé : Soit une suite géométrique avec $u_1 = 3$ et $q = 2$. Quel est $u_{10}$ ?</em></p>
+          <p class="step"><strong>Étape 1 : Identifier $n$ et $p$.</strong> Arrivée : $n = 10$. Départ : $p = 1$.</p>
+          <p class="step"><strong>Étape 2 : L'exposant.</strong> La puissance de la raison sera $(n - p) = (10 - 1) = 9$.</p>
+          <p class="step"><strong>Étape 3 : Calcul.</strong> $u_{10} = u_1 \times q^{10-1} \rightarrow u_{10} = 3 \times 2^9$.</p>
+          <p class="step"><strong>Étape 4 : Résultat.</strong> $u_{10} = 3 \times 512 = 1536$.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Exemple 2 : Partir de $u_0$</summary>
+        <div class="step-box">
+          <p class="step"><em>Énoncé : Soit $u_0 = 100$ et $q = 0.5$. Trouvez $u_5$.</em></p>
+          <p class="step"><strong>Étape 1 : Identifier $n$ et $p$.</strong> Arrivée : $n = 5$. Départ : $p = 0$.</p>
+          <p class="step"><strong>Étape 2 : L'exposant.</strong> C'est la beauté de la formule universelle : l'exposant est simplement $(5 - 0) = 5$.</p>
+          <p class="step"><strong>Étape 3 : Remplacer.</strong> $u_5 = u_0 \times q^{5-0} \rightarrow u_5 = 100 \times 0.5^5$.</p>
+          <p class="step"><strong>Étape 4 : Résultat.</strong> Sachant que $0.5^5 = 0.03125$, alors $u_5 = 100 \times 0.03125 = 3.125$.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Exemple 3 : Partir d'un rang quelconque</summary>
+        <div class="step-box">
+          <p class="step"><em>Énoncé : Dans une suite géométrique, on donne $u_3 = 2000$ et $q = 1.15$. Calculez $u_{24}$.</em></p>
+          <p class="step"><strong>Étape 1 : Identifier $n$ et $p$.</strong> Arrivée : $n = 24$. Départ : $p = 3$.</p>
+          <p class="step"><strong>Étape 2 : L'exposant.</strong> L'écart est $(24 - 3) = 21$.</p>
+          <p class="step"><strong>Étape 3 : Remplacer.</strong> $u_{24} = u_3 \times q^{24-3} \rightarrow u_{24} = 2000 \times 1.15^{21}$.</p>
+          <p class="step"><strong>Étape 4 : Résultat.</strong> À l'aide de la calculatrice, $1.15^{21} \approx 18.81$. Donc $u_{24} \approx 2000 \times 18.81 \approx 37620$.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>4. Trouver la somme d'une suite géométrique</h2>
+      <p>La somme dépend du terme de départ de la somme ($u_p$), de la raison ($q$), et encore une fois du <strong>nombre total de termes</strong> que l'on additionne, qui vaut toujours $(n - p + 1)$.</p>
+      
+      <div class="formula-box">
+        Formule : $S = u_p \times \frac{1 - q^{\text{nombre de termes}}}{1 - q}$
+        <span class="note">Soit : $S = u_p \times \frac{1 - q^{n - p + 1}}{1 - q}$</span>
+      </div>
+
+      <details>
+        <summary>Exemple 1 : Somme en partant de $u_1$</summary>
+        <div class="step-box">
+          <p class="step"><em>Énoncé : Calculez la somme des termes de $u_1$ à $u_5$ inclus, avec $u_1 = 3$ et $q = 2$.</em></p>
+          <p class="step"><strong>Étape 1 : Nombre de termes.</strong> De $p=1$ à $n=5$, on a $(5 - 1 + 1) = 5$ termes.</p>
+          <p class="step"><strong>Étape 2 : Remplacer.</strong> $S = u_1 \times \frac{1 - q^5}{1 - q} \rightarrow S = 3 \times \frac{1 - 2^5}{1 - 2}$.</p>
+          <p class="step"><strong>Étape 3 : Calcul des puissances.</strong> $2^5 = 32$. La fraction devient $\frac{1 - 32}{1 - 2} = \frac{-31}{-1} = 31$.</p>
+          <p class="step"><strong>Étape 4 : Résultat.</strong> $S = 3 \times 31 = 93$.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Exemple 2 : Somme en partant de $u_0$ (Attention à l'exposant)</summary>
+        <div class="step-box">
+          <p class="step"><em>Énoncé : Calculez la somme des termes de $u_0$ à $u_4$ inclus, avec $u_0 = 10$ et $q = -3$.</em></p>
+          <p class="step"><strong>Étape 1 : Nombre de termes.</strong> De $p=0$ à $n=4$, il y a $(4 - 0 + 1) = 5$ termes (et non 4 !).</p>
+          <p class="step"><strong>Étape 2 : Remplacer.</strong> $S = 10 \times \frac{1 - (-3)^5}{1 - (-3)}$.</p>
+          <p class="step"><strong>Étape 3 : Calcul.</strong> $(-3)^5 = -243$. Au dénominateur, $1 - (-3) = 4$. La fraction est $\frac{1 - (-243)}{4} = \frac{244}{4} = 61$.</p>
+          <p class="step"><strong>Étape 4 : Résultat.</strong> $S = 10 \times 61 = 610$.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Exemple 3 : Somme sur une portion de la suite</summary>
+        <div class="step-box">
+          <p class="step"><em>Énoncé : Calculez la somme des termes de $u_3$ à $u_6$ inclus, sachant que $u_3 = 500$ et $q = 0.1$.</em></p>
+          <p class="step"><strong>Étape 1 : Nombre de termes.</strong> De $p=3$ à $n=6$, il y a $(6 - 3 + 1) = 4$ termes.</p>
+          <p class="step"><strong>Étape 2 : Remplacer.</strong> $S = u_3 \times \frac{1 - q^4}{1 - q} \rightarrow S = 500 \times \frac{1 - 0.1^4}{1 - 0.1}$.</p>
+          <p class="step"><strong>Étape 3 : Calcul.</strong> $0.1^4 = 0.0001$. Le numérateur est $1 - 0.0001 = 0.9999$. Le dénominateur est $1 - 0.1 = 0.9$.</p>
+          <p class="step"><strong>Étape 4 : Résultat.</strong> $S = 500 \times \frac{0.9999}{0.9} = 500 \times 1.111 = 555.5$.</p>
+        </div>
+      </details>
+    </section>
+
+    <p class="footer-note">&copy; 2026 LIBOY D. / IPES de Hesbaye / Plateforme éducative interactive</p>
+  </div>
+</body>
+</html>
